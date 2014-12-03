@@ -6,24 +6,30 @@
 //  Copyright (c) 2014 eu.djml. All rights reserved.
 //
 
-#import "Document.h"
+#import "GuidelineDocument.h"
+#import "HandyRoutines.h"
+#import "GuidelineDisplayingViewController.h"
+#import "PrefixHeader.pch"
 
-@interface Document ()
+@interface GuidelineDocument ()
 
 @end
 
-@implementation Document
+@implementation GuidelineDocument
 
 - (instancetype)init {
     self = [super init];
     if (self) {
         // Add your subclass-specific initialization here.
+        self.dictionaryGuideline = [HandyRoutines newEmptyGuideline];
+
     }
     return self;
 }
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController {
     [super windowControllerDidLoadNib:aController];
+    // *** NOT CALLED FROM STORYBOPARD? ??
     // Add any code here that needs to be executed once the windowController has loaded the document's window.
 }
 
@@ -34,12 +40,20 @@
 - (void)makeWindowControllers {
     // Override to return the Storyboard file name of the document.
     [self addWindowController:[[NSStoryboard storyboardWithName:@"Main" bundle:nil] instantiateControllerWithIdentifier:@"Document Window Controller"]];
+    
 }
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError {
     // Insert code here to write your document to data of the specified type. If outError != NULL, ensure that you create and set an appropriate error when returning nil.
     // You can also choose to override -fileWrapperOfType:error:, -writeToURL:ofType:error:, or -writeToURL:ofType:forSaveOperation:originalContentsURL:error: instead.
-    [NSException raise:@"UnimplementedMethod" format:@"%@ is unimplemented", NSStringFromSelector(_cmd)];
+    //[NSException raise:@"UnimplementedMethod" format:@"%@ is unimplemented", NSStringFromSelector(_cmd)];
+    
+    //NSLog(@"dataOfType: %@",typeName);
+    
+    [self.myGuidelineDisplayingViewController updateDocumentFromView];
+
+    return [HandyRoutines serializedDictionaryDataFromDictionary:self.dictionaryGuideline];
+
     return nil;
 }
 
@@ -47,8 +61,15 @@
     // Insert code here to read your document from the given data of the specified type. If outError != NULL, ensure that you create and set an appropriate error when returning NO.
     // You can also choose to override -readFromFileWrapper:ofType:error: or -readFromURL:ofType:error: instead.
     // If you override either of these, you should also override -isEntireFileLoaded to return NO if the contents are lazily loaded.
-    [NSException raise:@"UnimplementedMethod" format:@"%@ is unimplemented", NSStringFromSelector(_cmd)];
-    return YES;
+    //[NSException raise:@"UnimplementedMethod" format:@"%@ is unimplemented", NSStringFromSelector(_cmd)];
+    
+    //NSLog(@"dataOfType: %@",typeName);
+    
+    self.dictionaryGuideline = [HandyRoutines dictionaryFromPropertyListData:data];
+
+    return self.dictionaryGuideline != nil;
 }
+
+
 
 @end

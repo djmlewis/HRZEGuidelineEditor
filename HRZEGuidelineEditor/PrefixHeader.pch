@@ -1,0 +1,138 @@
+//
+//  PrefixHeader.pch
+//  HRZEDocumentEditor
+//
+//  Created by David Lewis on 02/12/2014.
+//  Copyright (c) 2014 eu.djml. All rights reserved.
+//
+
+#ifndef HRZEDocumentEditor_PrefixHeader_pch
+#define HRZEDocumentEditor_PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+//FILES
+#define kFileNameTabletDatabase @"tablets.plist"
+#define kFileExtension_TabletsDB @"plist"
+#define kFileExtension_Guideline @"plist"
+
+#define kStartingWeight 60.0f
+#define kStartingWeight10 0
+#define kMaxWeight 150
+#define kMinWeight 1
+
+
+#define kSettingsCell_AdultDaily -1
+#define kSettingsCell_AdultDOT -2
+#define kSettingsCell_AdultRenal -3
+#define kSettingsCell_PaedsDaily -4
+#define kSettingsCell_Strep -5
+
+#define kSetting_FavFileName -100
+#define kSetting_FavFileName_Key @"kSetting_FavFileName_Key"
+
+
+#define kSettingsTypeRoundValue 0
+#define kSettingsTypeRoundDirection 1
+#define kSettingsTypeDosage 2
+
+#define kColourDefaultBrightness 0.6f
+#define kColourDefaultBrightnessDarker 0.4f
+#define kColourDefaultLightSaturation 0.10f
+#define kColourDefaultLightSaturationInteger 10
+
+#define kRounding_Up 0
+#define kRounding_Down 1
+
+#define kField_MgPerKg 0
+#define kField_MgPerMl 1
+
+#define kDoseCalculationBy_MgKg 0
+#define kDoseCalculationBy_Threshold 1
+#define kDoseCalculationBy_MgKg_Adjustable 2
+#define kDoseCalculationBy_SingleDose 3
+
+
+//Alerts
+#define kAlertTitle_NewGuideline @"New Guideline"
+#define kAlertTitle_NewIndication @"New Indication"
+#define kAlertTitle_NewTablet @"New Tablet"
+#define kAlertTitle_NewDrug @"New Drug"
+#define kAlertTitle_New_DrugInformation @"New Drug Information"
+#define kAlertTitle_DeleteRow @"Delete"
+#define kAlertTitle_EditTabletName @"Edit Name"
+#define kAlertTitle_ExportDescription @"Export Description"
+
+
+//Notifications
+#define  kNotification_OpenGuidelineAttachment @"kNotification_OpenGuidelineAttachment"
+#define  kNotification_OpenTabletAttachment @"kNotification_OpenTabletAttachment"
+#define  kNotification_ReloadDrugsDisplay @"kNotification_ReloadDrugsDisplay"
+
+//tablets
+#define kKey_TabletsDB_TBAppIdentifier @"kKey_TabletsDB_TBAppIdentifier"
+#define kKey_Tablet_Array @"kKey_Tablet_Array"
+#define kKey_Tablet_Name @"kKey_Tablet_Name"
+#define kKey_Tablet_photo @"kKey_Tablet_photo"
+
+
+//GUIDELINE
+#define kKey_GuidelineTBAppIdentifier @"kKey_GuidelineTBAppIdentifier"
+#define kKey_GuidelineName @"kKey_GuidelineName"
+#define kKey_GuidelineArrayOfIndications @"kKey_GuidelineArrayOfIndications"
+#define kKey_GuidelineArrayOfInformation @"kKey_GuidelineArrayOfInformation"
+#define kKey_GuidelineDescription @"kKey_GuidelineDescription"
+
+//the INDICATION
+#define kKey_IndicationColour @"kKey_IndicationColour"
+#define kKey_Indication_HideComments @"kKey_Indication_HideComments"
+#define kKey_IndicationPageColourSaturation @"kKey_IndicationPageColourSaturation"
+#define kKey_IndicationName @"kKey_IndicationName"
+#define kKey_IndicationComments @"kKey_IndicationComments"
+#define kKey_IndicationDosingInstructions @"kKey_IndicationDosingInstructions"
+#define kKey_ArrayOfDrugs @"kKey_ArrayOfDrugs"
+//#define kKey_DescriptionString @"kKey_DescriptionString"
+
+#define kIndicationColourBlackTag -1
+#define kIndicationColourWhiteTag -2
+
+//DRUG INFO
+#define kKey_DrugInfoName @"kKey_DrugInfoName"
+#define kKey_DrugInfoDescription @"kKey_DrugInfoDescription"
+
+
+//the parameters that define a drug use
+#define kKey_DoseCalculationType @"kKey_DoseCalculationType"
+#define kKey_DrugDisplayName @"kKey_DrugDisplayName"
+#define kKey_DrugShowInList @"kKey_DrugShowInList"
+//mg/kg
+#define kKey_RoundingUpDown @"kRoundingUpDown"
+#define kKey_ValueOfRounding @"kValueOfRounding"
+#define kKey_DosageMgKg @"kKey_DosageMgKg"
+#define kKey_DosageMgKgMaximum @"kDosageMgKgHi"
+#define kKey_DosageMgKgMinimum @"kDosageMgKgLow"
+#define kKey_MaxDose @"kMaxDose"
+#define kKey_DoseUnits @"kKey_DoseUnits"
+
+//thresh
+#define kKey_Threshold_values @"kKey_Threshold_values"
+#define kKey_Threshold_doses @"kKey_Threshold_doses"
+#define kKey_Threshold_Booleans @"kKey_Threshold_Booleans"
+#define kKey_Threshold_DoseForms @"kKey_Threshold_DoseForms"
+#define kKey_Threshold_MinWeight @"kKey_Threshold_MinWeight"
+
+//single
+#define kKey_SingleDoseInstructions @"kKey_SingleDoseInstructions"
+
+//the screens
+#define kdict_AdultDaily @"Adult Daily"
+#define kdict_AdultDOT @"Adult DOT"
+#define kdict_AdultRenal @"Adult Renal"
+#define kdict_PaedsDaily @"Paeds Daily"
+#define kdict_Strep @"Streptomycin"
+
+
+
+
+#endif

@@ -1,5 +1,5 @@
 //
-//  Document.h
+//  GuidelineWindowController.h
 //  HRZEGuidelineEditor
 //
 //  Created by David Lewis on 02/12/2014.
@@ -8,8 +8,15 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface Document : NSDocument
+
+@interface GuidelineWindowController : NSWindowController
+
+
+
+
+
+
+
 
 
 @end
-
