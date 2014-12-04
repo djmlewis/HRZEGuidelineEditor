@@ -17,6 +17,8 @@
 		636011C81A2E3222004B4BA2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 636011C61A2E3222004B4BA2 /* Main.storyboard */; };
 		636011D41A2E3222004B4BA2 /* HRZEGuidelineEditorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 636011D31A2E3222004B4BA2 /* HRZEGuidelineEditorTests.m */; };
 		636011E01A2E3253004B4BA2 /* HandyRoutines.m in Sources */ = {isa = PBXBuildFile; fileRef = 636011DD1A2E3253004B4BA2 /* HandyRoutines.m */; };
+		63C347381A30FE8B0083E850 /* Calculation.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63C347371A30FE8B0083E850 /* Calculation.xib */; };
+		63E40C3B1A30EF58009FB233 /* DrugEditingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E40C3A1A30EF58009FB233 /* DrugEditingViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,9 @@
 		636011DD1A2E3253004B4BA2 /* HandyRoutines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HandyRoutines.m; sourceTree = "<group>"; };
 		636011DE1A2E3253004B4BA2 /* HandyRoutines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HandyRoutines.h; sourceTree = "<group>"; };
 		636011DF1A2E3253004B4BA2 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		63C347371A30FE8B0083E850 /* Calculation.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Calculation.xib; sourceTree = "<group>"; };
+		63E40C391A30EF58009FB233 /* DrugEditingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DrugEditingViewController.h; path = ../DrugEditingViewController.h; sourceTree = "<group>"; };
+		63E40C3A1A30EF58009FB233 /* DrugEditingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DrugEditingViewController.m; path = ../DrugEditingViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,10 +97,11 @@
 		636011B61A2E3222004B4BA2 /* HRZEGuidelineEditor */ = {
 			isa = PBXGroup;
 			children = (
-				630D8B611A2FA6C5006D7E88 /* IndicationTappedSegue.h */,
-				630D8B621A2FA6C5006D7E88 /* IndicationTappedSegue.m */,
+				63C347391A3101C40083E850 /* Xibs */,
 				636011B91A2E3222004B4BA2 /* AppDelegate.h */,
 				636011BA1A2E3222004B4BA2 /* AppDelegate.m */,
+				63E40C391A30EF58009FB233 /* DrugEditingViewController.h */,
+				63E40C3A1A30EF58009FB233 /* DrugEditingViewController.m */,
 				636011BE1A2E3222004B4BA2 /* GuidelineDisplayingViewController.h */,
 				636011BF1A2E3222004B4BA2 /* GuidelineDisplayingViewController.m */,
 				636011C11A2E3222004B4BA2 /* GuidelineDocument.h */,
@@ -105,6 +111,8 @@
 				636011C41A2E3222004B4BA2 /* Images.xcassets */,
 				630D8B5E1A2F9DA3006D7E88 /* IndicationEditViewController.h */,
 				630D8B5F1A2F9DA3006D7E88 /* IndicationEditViewController.m */,
+				630D8B611A2FA6C5006D7E88 /* IndicationTappedSegue.h */,
+				630D8B621A2FA6C5006D7E88 /* IndicationTappedSegue.m */,
 				636011C61A2E3222004B4BA2 /* Main.storyboard */,
 				636011DF1A2E3253004B4BA2 /* PrefixHeader.pch */,
 				636011B71A2E3222004B4BA2 /* Supporting Files */,
@@ -136,6 +144,14 @@
 				636011D21A2E3222004B4BA2 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		63C347391A3101C40083E850 /* Xibs */ = {
+			isa = PBXGroup;
+			children = (
+				63C347371A30FE8B0083E850 /* Calculation.xib */,
+			);
+			name = Xibs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -219,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				636011C51A2E3222004B4BA2 /* Images.xcassets in Resources */,
+				63C347381A30FE8B0083E850 /* Calculation.xib in Resources */,
 				636011C81A2E3222004B4BA2 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -240,6 +257,7 @@
 				636011C31A2E3222004B4BA2 /* GuidelineDocument.m in Sources */,
 				630D8B631A2FA6C5006D7E88 /* IndicationTappedSegue.m in Sources */,
 				636011C01A2E3222004B4BA2 /* GuidelineDisplayingViewController.m in Sources */,
+				63E40C3B1A30EF58009FB233 /* DrugEditingViewController.m in Sources */,
 				636011BD1A2E3222004B4BA2 /* main.m in Sources */,
 				636011BB1A2E3222004B4BA2 /* AppDelegate.m in Sources */,
 				630D8B601A2F9DA3006D7E88 /* IndicationEditViewController.m in Sources */,

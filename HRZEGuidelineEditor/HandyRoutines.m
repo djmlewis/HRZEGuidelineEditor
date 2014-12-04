@@ -99,7 +99,7 @@
     return  (NSMutableDictionary *)[NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:dictToCopy]];
 }
 
-+(NSMutableDictionary *)createNewIndicationWithName:(NSString *)indicationName
++(NSMutableDictionary *)newEmptyIndicationWithName:(NSString *)indicationName
 {
     NSMutableDictionary *indication = [NSMutableDictionary dictionaryWithCapacity:2];
     [indication setObject:indicationName forKey:kKey_IndicationName];
@@ -157,7 +157,7 @@
 +(NSData *)dataForDescriptionAttributedString:(NSAttributedString *)attributedString
 {
     if (attributedString.length == 0) {
-        attributedString = [[NSAttributedString alloc] initWithString:@""];
+        attributedString = [[NSAttributedString alloc] initWithString:@" "];
     }
     NSError *error = nil;
     NSRange range = NSMakeRange(0, attributedString.length);
@@ -167,7 +167,7 @@
 
 +(NSAttributedString *)attributedStringFromDescriptionData:(NSData *)data
 {
-    if (data == nil) {
+    if (data == nil || data.length == 0) {
         return [[NSAttributedString alloc] initWithString:@""];
     }
     
@@ -180,8 +180,8 @@
 
 +(NSString *)stringFromStringTakingAccountOfNull:(NSString *)string
 {
-    if (string.length == 0) {
-        string = @"";
+    if (string == nil) {
+        string = @" ";
     }
     return string;
 }

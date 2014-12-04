@@ -10,6 +10,7 @@
 
 
 @class GuidelineDisplayingViewController;
+@class DrugEditingViewController;
 
 
 @interface IndicationEditViewController : NSViewController
@@ -21,6 +22,7 @@ NSBrowserDelegate
 
 
 @property (strong) GuidelineDisplayingViewController *myGuidelineDisplayingViewController;
+@property (strong) DrugEditingViewController *embeddedDrugEditingViewController;
 
 @property (strong) NSMutableArray *arrayDrugsInIndication;
 @property (strong) NSMutableDictionary *indicationBeingDisplayed;
@@ -28,9 +30,9 @@ NSBrowserDelegate
 @property (weak) IBOutlet NSButton *checkBoxHideComments;
 @property (weak) IBOutlet NSTextField *textFieldDosingInstructions;
 
+@property (weak) IBOutlet NSTableView *tableViewDrugs;
 
 @property (weak) IBOutlet NSTextField *textFieldIndicationName;
-@property (weak) IBOutlet NSBrowser *browserDrugs;
 
 
 

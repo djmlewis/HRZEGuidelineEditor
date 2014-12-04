@@ -14,7 +14,7 @@
 @interface GuidelineDisplayingViewController : NSViewController
 <
     NSTextFieldDelegate, NSTextViewDelegate,
-NSBrowserDelegate
+NSTableViewDataSource, NSTableViewDelegate
 >
 
 
@@ -27,12 +27,13 @@ NSBrowserDelegate
 @property (strong) NSMutableArray *arrayIndicationsInGuideline;
 
 @property (unsafe_unretained) IBOutlet NSTextView *textViewGuidelineDescription;
-@property (weak) IBOutlet NSBrowser *browserIndications;
+@property (weak) IBOutlet NSSegmentedControl *segmentAddRemoveIndication;
 
+@property (weak) IBOutlet NSTableView *tableViewIndications;
 
 
 -(void)updateDocumentFromView;
-
+-(void)reloadTableViewSavingSelection:(BOOL)saveSelection;
 
 
 

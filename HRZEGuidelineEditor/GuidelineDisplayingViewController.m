@@ -52,6 +52,12 @@
     {
         self.arrayIndicationsInGuideline = [NSMutableArray array];
     }
+    if (self.arrayIndicationsInGuideline.count>0)
+    {
+        
+    }
+    [self reloadTableViewSavingSelection:YES];
+    [self displayFirstIndication];
 }
 
 -(void)updateDocumentFromView
@@ -68,38 +74,107 @@
 }
 
 
+
 #pragma mark - Add/remove indications
 
 - (IBAction)segmentAddRemoveIndicationTapped:(NSSegmentedControl *)sender
 {
    // NSInteger selSeg = sender.selectedSegment;
-}
-
-#pragma mark - BrowserDelegate
-- (IBAction)tapper:(NSButton *)sender {
-    [self.browserIndications reloadColumn:0];
-}
-
-- (NSInteger)browser:(NSBrowser *)sender numberOfRowsInColumn:(NSInteger)column {
-    if (column == 0) {
-        return self.arrayIndicationsInGuideline.count;
+    switch (sender.selectedSegment) {
+        case 0:
+            [self addNewIndicationWithName:@"Untitled"];
+            break;
+        case 1:
+            [self deleteSelectedIndication];
+            break;
     }
-    return 0;
 }
 
-- (void)browser:(NSBrowser *)sender willDisplayCell:(NSBrowserCell *)cell atRow:(NSInteger)row column:(NSInteger)column {
-    // Lazily setup the cell's properties in this method
+-(void)addNewIndicationWithName:(NSString *)name
+{
+    [self updateDocumentFromView];
+    NSMutableDictionary *indication = [HandyRoutines newEmptyIndicationWithName:name];
+    [self.arrayIndicationsInGuideline addObject:indication];
+    [self reloadTableViewSavingSelection:NO];
+    [self.tableViewIndications selectRowIndexes:[NSIndexSet indexSetWithIndex:self.arrayIndicationsInGuideline.count-1] byExtendingSelection:NO];
+    [self displayIndicationInfoForRow:self.arrayIndicationsInGuideline.count-1];
+    [self updateDocumentFromView];
+}
+
+-(void)deleteSelectedIndication
+{
+    [self updateDocumentFromView];
+    NSInteger row = [self.tableViewIndications selectedRow];
+    if (row >=0 && row<self.arrayIndicationsInGuideline.count)
+    {
+        self.embeddedIndicationEditViewController.view.hidden = YES;
+        [self.arrayIndicationsInGuideline removeObjectAtIndex:row];
+        [self reloadTableViewSavingSelection:NO];
+        [self updateDocumentFromView];
+        [self displayFirstIndication];
+    }
+}
+
+-(void)displayFirstIndication
+{
+    if (self.arrayIndicationsInGuideline.count > 0) {
+        [self.tableViewIndications selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+        [self displayIndicationInfoForRow:0];
+    }
+
+}
+
+#pragma mark - TableView DataSource & Delegate
+
+-(void)reloadTableViewSavingSelection:(BOOL)saveSelection
+{
+    NSInteger row = [self.tableViewIndications selectedRow];
+    [self.tableViewIndications reloadData];
+    [self.segmentAddRemoveIndication setEnabled:NO forSegment:1];
+    if (saveSelection &&  row>=0) {
+        [self.tableViewIndications selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+        [self.segmentAddRemoveIndication setEnabled:YES forSegment:1];
+    }
+}
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
+{
+    NSInteger count=0;
+    if (self.arrayIndicationsInGuideline)
+        count=[self.arrayIndicationsInGuideline count];
+    return count;
+}
+
+
+- (NSView *)tableView:(NSTableView *)tableView   viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+    // Retrieve to get the @"MyView" from the pool or,
+    // if no version is available in the pool, load the Interface Builder version
+    NSTableCellView *result = [tableView makeViewWithIdentifier:@"indications" owner:self];
+    
+    // Set the stringValue of the cell's text field to the nameArray value at row
     NSMutableDictionary *indicationDictAtRow = [self.arrayIndicationsInGuideline objectAtIndex:row];
-    [cell setTitle: [indicationDictAtRow objectForKey:kKey_IndicationName]];
-    [cell setLeaf:YES];
-}
+    result.textField.stringValue = [HandyRoutines stringFromStringTakingAccountOfNull: [indicationDictAtRow objectForKey:kKey_IndicationName]];
 
+    // Return the result
+    return result;
+}
 
 #pragma mark - Segue
-- (IBAction)indicationsBrowserTapped:(NSBrowser *)sender
+
+- (IBAction)tableViewIndicationsTapped:(NSTableView *)sender
 {
-    [self.embeddedIndicationEditViewController updateIndicationDisplayForIndication: [self.arrayIndicationsInGuideline objectAtIndex:[sender selectedRowInColumn:0]]];
-    self.embeddedIndicationEditViewController.view.hidden = NO;
+    [self displayIndicationInfoForRow:[sender selectedRow]];
+}
+
+-(void)displayIndicationInfoForRow:(NSInteger)row
+{
+    if (row<self.arrayIndicationsInGuideline.count) {
+        [self updateDocumentFromView];
+        [self.embeddedIndicationEditViewController updateIndicationDisplayForIndication: [self.arrayIndicationsInGuideline objectAtIndex:row]];
+        self.embeddedIndicationEditViewController.view.hidden = NO;
+        [self reloadTableViewSavingSelection:YES];
+    }
 }
 
 -(void)prepareForSegue:(NSStoryboardSegue *)segue sender:(id)sender

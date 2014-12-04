@@ -9,6 +9,9 @@
 #import "IndicationEditViewController.h"
 #import "PrefixHeader.pch"
 #import "HandyRoutines.h"
+#import "GuidelineDisplayingViewController.h"
+#import "DrugEditingViewController.h"   
+
 
 
 @interface IndicationEditViewController ()
@@ -53,9 +56,9 @@
     self.indicationBeingDisplayed = indication;
     self.arrayDrugsInIndication = [indication objectForKey:kKey_ArrayOfDrugs];
     [self correctForNilObjects];
-    [self.browserDrugs reloadColumn:0];
-    [self.textFieldIndicationName setStringValue:[indication objectForKey:kKey_IndicationName]];
-    [self.textFieldDosingInstructions setStringValue:[indication objectForKey:kKey_IndicationDosingInstructions]];
+    [self reloadTableViewSavingSelection:NO];
+    [self.textFieldIndicationName setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationName]]];
+    [self.textFieldDosingInstructions setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationDosingInstructions]]];
     [[self.textViewIndicationComments textStorage] setAttributedString:[HandyRoutines attributedStringFromDescriptionData:[indication objectForKey:kKey_IndicationComments]]];
     [self.checkBoxHideComments setState:[[indication objectForKey:kKey_Indication_HideComments] boolValue]];
 }
@@ -70,23 +73,89 @@
     [self.indicationBeingDisplayed setObject:[NSNumber numberWithBool:self.checkBoxHideComments.state] forKey:kKey_Indication_HideComments];
 }
 
-#pragma mark - BrowserDelegate
-// Non-item based API example. This code will work on all systems, but applications targeting SnowLeopard and higher should use the new item-based API.
-
-- (NSInteger)browser:(NSBrowser *)sender numberOfRowsInColumn:(NSInteger)column {
-    if (column == 0) {
-        return self.arrayDrugsInIndication.count;
+#pragma mark - NSTextFieldDelegate
+- (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor
+{
+    if ([control.identifier isEqualToString:@"textFieldIndicationName"])
+    {
+        if (fieldEditor.string.length == 0) {
+            return NO;
+        }
+        [self.indicationBeingDisplayed setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldIndicationName.stringValue] forKey:kKey_IndicationName];
+        [self.myGuidelineDisplayingViewController reloadTableViewSavingSelection:YES];
+        return YES;
     }
-    return 0;
+    
+    
+    return YES;
 }
 
-- (void)browser:(NSBrowser *)sender willDisplayCell:(NSBrowserCell *)cell atRow:(NSInteger)row column:(NSInteger)column {
-    // Lazily setup the cell's properties in this method
+#pragma mark - Drugs
+
+- (IBAction)tableViewDrugsTapped:(NSTableView *)sender
+{
+    [self displayDrugInfoForRow:[sender selectedRow]];
+}
+
+-(void)displayDrugInfoForRow:(NSInteger)row
+{
+    if (row<self.arrayDrugsInIndication.count)
+    {
+        [self updateIndicationFromView];
+        [self.embeddedDrugEditingViewController displayDrugInfo:[self.arrayDrugsInIndication objectAtIndex:row]];
+        self.embeddedDrugEditingViewController.view.hidden = NO;
+        [self reloadTableViewSavingSelection:YES];
+    }
+}
+
+-(void)prepareForSegue:(NSStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"embedDrugEditVC"])
+    {
+        //comes first before we get a document
+        self.embeddedDrugEditingViewController = (DrugEditingViewController *)segue.destinationController;
+        self.embeddedDrugEditingViewController.myIndicationEditViewController = self;
+        self.embeddedDrugEditingViewController.view.hidden = YES;
+    }
+    
+    
+}
+
+
+#pragma mark - TableView DataSource & Delegate
+
+-(void)reloadTableViewSavingSelection:(BOOL)saveSelection
+{
+    NSInteger row = [self.tableViewDrugs selectedRow];
+    [self.tableViewDrugs reloadData];
+    if (saveSelection &&  row>=0) {
+        [self.tableViewDrugs selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+    }
+}
+
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
+{
+    NSInteger count=0;
+    if (self.arrayDrugsInIndication)
+        count=[self.arrayDrugsInIndication count];
+    return count;
+}
+
+
+- (NSView *)tableView:(NSTableView *)tableView   viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+    // Retrieve to get the @"MyView" from the pool or,
+    // if no version is available in the pool, load the Interface Builder version
+    NSTableCellView *result = [tableView makeViewWithIdentifier:@"drugs" owner:self];
+    
+    // Set the stringValue of the cell's text field to the nameArray value at row
     NSMutableDictionary *indicationDictAtRow = [self.arrayDrugsInIndication objectAtIndex:row];
-    [cell setTitle: [indicationDictAtRow objectForKey:kKey_DrugDisplayName]];
-    [cell setLeaf:YES];
+    result.textField.stringValue = [HandyRoutines stringFromStringTakingAccountOfNull:[indicationDictAtRow objectForKey:kKey_DrugDisplayName]];
+    
+    // Return the result
+    return result;
 }
-
 
 
 @end

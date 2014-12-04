@@ -30,7 +30,7 @@
 +(NSString *)predecateStringForPredicate:(NSNumber *)predicate;
 +(BOOL)leftSide:(CGFloat)leftSide is:(NSInteger)predicate thanRightSide:(CGFloat)rightSide;
 
-+(NSMutableDictionary *)createNewIndicationWithName:(NSString *)indicationName;
++(NSMutableDictionary *)newEmptyIndicationWithName:(NSString *)indicationName;
 +(NSMutableDictionary *)newEmptyGuideline;
 +(NSMutableDictionary *)newEmptyTablet;
 +(NSMutableDictionary *)newEmptyTabletsDictionary;
