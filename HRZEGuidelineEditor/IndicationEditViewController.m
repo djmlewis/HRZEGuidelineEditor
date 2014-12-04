@@ -8,7 +8,7 @@
 
 #import "IndicationEditViewController.h"
 #import "PrefixHeader.pch"
-
+#import "HandyRoutines.h"
 
 
 @interface IndicationEditViewController ()
@@ -39,20 +39,36 @@
 -(void)viewWillAppear
 {
     [super viewWillAppear];
-
+    self.view.wantsLayer = YES;
+    self.view.layer.backgroundColor = [NSColor lightGrayColor].CGColor;
 }
 
 
 -(void)updateIndicationDisplayForIndication:(NSMutableDictionary *)indication
 {
+    //first take on board any changes
+    [self updateIndicationFromView];
+    
+    
     self.indicationBeingDisplayed = indication;
     self.arrayDrugsInIndication = [indication objectForKey:kKey_ArrayOfDrugs];
     [self correctForNilObjects];
     [self.browserDrugs reloadColumn:0];
     [self.textFieldIndicationName setStringValue:[indication objectForKey:kKey_IndicationName]];
-    
+    [self.textFieldDosingInstructions setStringValue:[indication objectForKey:kKey_IndicationDosingInstructions]];
+    [[self.textViewIndicationComments textStorage] setAttributedString:[HandyRoutines attributedStringFromDescriptionData:[indication objectForKey:kKey_IndicationComments]]];
+    [self.checkBoxHideComments setState:[[indication objectForKey:kKey_Indication_HideComments] boolValue]];
 }
 
+-(void)updateIndicationFromView
+{
+    [self.indicationBeingDisplayed setObject:self.arrayDrugsInIndication forKey:kKey_ArrayOfDrugs];
+    [self.indicationBeingDisplayed setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldIndicationName.stringValue] forKey:kKey_IndicationName];
+    [self.indicationBeingDisplayed setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDosingInstructions.stringValue] forKey:kKey_IndicationDosingInstructions];
+    [self.indicationBeingDisplayed setObject:[HandyRoutines dataForDescriptionAttributedString:self.textViewIndicationComments.attributedString] forKey:kKey_IndicationComments];
+    [self.indicationBeingDisplayed setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDosingInstructions.stringValue] forKey:kKey_IndicationDosingInstructions];
+    [self.indicationBeingDisplayed setObject:[NSNumber numberWithBool:self.checkBoxHideComments.state] forKey:kKey_Indication_HideComments];
+}
 
 #pragma mark - BrowserDelegate
 // Non-item based API example. This code will work on all systems, but applications targeting SnowLeopard and higher should use the new item-based API.

@@ -24,6 +24,9 @@ NSBrowserDelegate
 
 @property (strong) NSMutableArray *arrayDrugsInIndication;
 @property (strong) NSMutableDictionary *indicationBeingDisplayed;
+@property (unsafe_unretained) IBOutlet NSTextView *textViewIndicationComments;
+@property (weak) IBOutlet NSButton *checkBoxHideComments;
+@property (weak) IBOutlet NSTextField *textFieldDosingInstructions;
 
 
 @property (weak) IBOutlet NSTextField *textFieldIndicationName;

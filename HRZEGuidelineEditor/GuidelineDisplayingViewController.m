@@ -67,8 +67,18 @@
 
 }
 
+
+#pragma mark - Add/remove indications
+
+- (IBAction)segmentAddRemoveIndicationTapped:(NSSegmentedControl *)sender
+{
+   // NSInteger selSeg = sender.selectedSegment;
+}
+
 #pragma mark - BrowserDelegate
-// Non-item based API example. This code will work on all systems, but applications targeting SnowLeopard and higher should use the new item-based API.
+- (IBAction)tapper:(NSButton *)sender {
+    [self.browserIndications reloadColumn:0];
+}
 
 - (NSInteger)browser:(NSBrowser *)sender numberOfRowsInColumn:(NSInteger)column {
     if (column == 0) {
@@ -86,6 +96,11 @@
 
 
 #pragma mark - Segue
+- (IBAction)indicationsBrowserTapped:(NSBrowser *)sender
+{
+    [self.embeddedIndicationEditViewController updateIndicationDisplayForIndication: [self.arrayIndicationsInGuideline objectAtIndex:[sender selectedRowInColumn:0]]];
+    self.embeddedIndicationEditViewController.view.hidden = NO;
+}
 
 -(void)prepareForSegue:(NSStoryboardSegue *)segue sender:(id)sender
 {
@@ -95,12 +110,6 @@
         self.embeddedIndicationEditViewController = (IndicationEditViewController *)segue.destinationController;
         self.embeddedIndicationEditViewController.myGuidelineDisplayingViewController = self;
         self.embeddedIndicationEditViewController.view.hidden = YES;
-    }
-    else     if ([segue.identifier isEqualToString:@"IndicationTappedSegue"])
-    {
-        NSBrowser *browser = (NSBrowser *)sender;
-        [self.embeddedIndicationEditViewController updateIndicationDisplayForIndication: [self.arrayIndicationsInGuideline objectAtIndex:[browser selectedRowInColumn:0]]];
-        self.embeddedIndicationEditViewController.view.hidden = NO;
     }
 
     

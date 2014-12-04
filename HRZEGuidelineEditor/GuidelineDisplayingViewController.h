@@ -27,11 +27,11 @@ NSBrowserDelegate
 @property (strong) NSMutableArray *arrayIndicationsInGuideline;
 
 @property (unsafe_unretained) IBOutlet NSTextView *textViewGuidelineDescription;
+@property (weak) IBOutlet NSBrowser *browserIndications;
 
 
 
 -(void)updateDocumentFromView;
-
 
 
 
