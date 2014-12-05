@@ -24,6 +24,28 @@ NSTextFieldDelegate
 
 
 
+@property (weak) IBOutlet NSTabView *tabViewCalculationType;
+
+
+//mg/Kg
+@property (weak) IBOutlet NSTextField *textFieldmgkgDoseage;
+@property (weak) IBOutlet NSTextField *textFieldMinDosage;
+@property (weak) IBOutlet NSTextField *textFieldMaxDosage;
+@property (weak) IBOutlet NSTextField *textFieldRoundingValue;
+@property (weak) IBOutlet NSTextField *textFieldMaximumFinalDose;
+@property (weak) IBOutlet NSSegmentedControl *segmentRoundingDirection;
+@property (weak) IBOutlet NSButton *checkboxAllowAdjustment;
+@property (weak) IBOutlet NSView *containerViewAdjustDosage;
+
+
+
+
+
+
+
+
+
+
 -(void)displayDrugInfo:(NSMutableDictionary *)drug;
 
 
