@@ -13,17 +13,24 @@
 
 @interface DrugEditingViewController : NSViewController
 <
-NSTextFieldDelegate
+NSTextFieldDelegate,
+NSTableViewDataSource, NSTableViewDelegate
 >
 
 @property (strong) IndicationEditViewController *myIndicationEditViewController;
 @property (strong) NSMutableDictionary *drugDisplayed;
 
+@property (strong) NSMutableArray *arrayThresholdBooleans;
+@property (strong) NSMutableArray *arrayThresholdWeights;
+@property (strong) NSMutableArray *arrayThresholdDoses;
+@property (strong) NSMutableArray *arrayThresholdDoseForms;
+
+
+
+
 @property (weak) IBOutlet NSTextField *textFieldDrugName;
 @property (unsafe_unretained) IBOutlet NSTextView *textViewDrugDescription;
-
-
-
+@property (weak) IBOutlet NSButton *checkboxShowDrugInList;
 @property (weak) IBOutlet NSTabView *tabViewCalculationType;
 
 
@@ -37,7 +44,13 @@ NSTextFieldDelegate
 @property (weak) IBOutlet NSButton *checkboxAllowAdjustment;
 @property (weak) IBOutlet NSView *containerViewAdjustDosage;
 
+//single dose
+@property (weak) IBOutlet NSTextField *textFieldSingleDosagedescription;
 
+//threshold
+@property (weak) IBOutlet NSSegmentedControl *segmentThresholdAddRemove;
+@property (weak) IBOutlet NSTextField *textFieldThresholdMinimumWeightAllowed;
+@property (weak) IBOutlet NSTableView *tableViewThresholds;
 
 
 

@@ -17,6 +17,7 @@
 		636011C81A2E3222004B4BA2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 636011C61A2E3222004B4BA2 /* Main.storyboard */; };
 		636011D41A2E3222004B4BA2 /* HRZEGuidelineEditorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 636011D31A2E3222004B4BA2 /* HRZEGuidelineEditorTests.m */; };
 		636011E01A2E3253004B4BA2 /* HandyRoutines.m in Sources */ = {isa = PBXBuildFile; fileRef = 636011DD1A2E3253004B4BA2 /* HandyRoutines.m */; };
+		6378178B1A33A31800C82FBE /* ThresholdTableCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378178A1A33A31800C82FBE /* ThresholdTableCellView.m */; };
 		63C347381A30FE8B0083E850 /* Calculation.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63C347371A30FE8B0083E850 /* Calculation.xib */; };
 		63E40C3B1A30EF58009FB233 /* DrugEditingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E40C3A1A30EF58009FB233 /* DrugEditingViewController.m */; };
 /* End PBXBuildFile section */
@@ -53,6 +54,8 @@
 		636011DD1A2E3253004B4BA2 /* HandyRoutines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HandyRoutines.m; sourceTree = "<group>"; };
 		636011DE1A2E3253004B4BA2 /* HandyRoutines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HandyRoutines.h; sourceTree = "<group>"; };
 		636011DF1A2E3253004B4BA2 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		637817891A33A31800C82FBE /* ThresholdTableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThresholdTableCellView.h; sourceTree = "<group>"; };
+		6378178A1A33A31800C82FBE /* ThresholdTableCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThresholdTableCellView.m; sourceTree = "<group>"; };
 		63C347371A30FE8B0083E850 /* Calculation.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Calculation.xib; sourceTree = "<group>"; };
 		63E40C391A30EF58009FB233 /* DrugEditingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DrugEditingViewController.h; path = ../DrugEditingViewController.h; sourceTree = "<group>"; };
 		63E40C3A1A30EF58009FB233 /* DrugEditingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DrugEditingViewController.m; path = ../DrugEditingViewController.m; sourceTree = "<group>"; };
@@ -97,7 +100,6 @@
 		636011B61A2E3222004B4BA2 /* HRZEGuidelineEditor */ = {
 			isa = PBXGroup;
 			children = (
-				63C347391A3101C40083E850 /* Xibs */,
 				636011B91A2E3222004B4BA2 /* AppDelegate.h */,
 				636011BA1A2E3222004B4BA2 /* AppDelegate.m */,
 				63E40C391A30EF58009FB233 /* DrugEditingViewController.h */,
@@ -116,6 +118,9 @@
 				636011C61A2E3222004B4BA2 /* Main.storyboard */,
 				636011DF1A2E3253004B4BA2 /* PrefixHeader.pch */,
 				636011B71A2E3222004B4BA2 /* Supporting Files */,
+				637817891A33A31800C82FBE /* ThresholdTableCellView.h */,
+				6378178A1A33A31800C82FBE /* ThresholdTableCellView.m */,
+				63C347391A3101C40083E850 /* Xibs */,
 			);
 			path = HRZEGuidelineEditor;
 			sourceTree = "<group>";
@@ -261,6 +266,7 @@
 				636011BD1A2E3222004B4BA2 /* main.m in Sources */,
 				636011BB1A2E3222004B4BA2 /* AppDelegate.m in Sources */,
 				630D8B601A2F9DA3006D7E88 /* IndicationEditViewController.m in Sources */,
+				6378178B1A33A31800C82FBE /* ThresholdTableCellView.m in Sources */,
 				636011E01A2E3253004B4BA2 /* HandyRoutines.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
