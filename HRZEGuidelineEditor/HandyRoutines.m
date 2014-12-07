@@ -29,7 +29,7 @@
 
 +(NSMutableDictionary *)newEmptyTabletsDictionary
 {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     NSMutableArray *arrayOfTabs = [NSMutableArray array];
     [dict setObject:arrayOfTabs forKey:kKey_Tablet_Array];
     [dict setObject:kKey_TabletsDB_TBAppIdentifier forKey:kKey_GuidelineTBAppIdentifier];
@@ -38,7 +38,7 @@
 
 +(NSMutableDictionary *)newEmptyTablet
 {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:2];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setObject:@"" forKey:kKey_Tablet_Name];
     [dict setObject:[NSData data] forKey:kKey_Tablet_photo];
     return dict;
@@ -47,7 +47,7 @@
 
 +(NSMutableDictionary *)newEmptyGuideline
 {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:5];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     NSMutableArray *indications = [NSMutableArray arrayWithCapacity:1];
     [dict setObject:indications forKey:kKey_GuidelineArrayOfIndications];
     NSMutableArray *infos = [NSMutableArray arrayWithCapacity:1];
@@ -61,7 +61,7 @@
 
 +(NSMutableDictionary *)newEmptyDrugInfoWithName:(NSString *)infoName
 {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:2];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setObject:infoName forKey:kKey_DrugInfoName];
     [dict setObject:[HandyRoutines dataForDescriptionAttributedString:[[NSAttributedString alloc] initWithString:@" "]] forKey:kKey_DrugInfoDescription];
     
@@ -83,6 +83,15 @@
     return nil;
 }
 
+
++(NSMutableArray *)arrayTakingAccountOfNullFromArray:(NSMutableArray *)arrayToCheck
+{
+    if (arrayToCheck == nil) {
+        return [NSMutableArray array];
+    }
+    return arrayToCheck;
+}
+
 +(NSMutableArray *)mutableArrayFromArrayOfIntegers:(NSArray *)array
 {
     NSMutableArray *marray = [NSMutableArray arrayWithCapacity:array.count];
@@ -101,7 +110,7 @@
 
 +(NSMutableDictionary *)newEmptyIndicationWithName:(NSString *)indicationName
 {
-    NSMutableDictionary *indication = [NSMutableDictionary dictionaryWithCapacity:2];
+    NSMutableDictionary *indication = [NSMutableDictionary dictionary];
     [indication setObject:indicationName forKey:kKey_IndicationName];
     [indication setObject:@"" forKey:kKey_IndicationComments];
     [indication setObject:[NSNumber numberWithBool:NO] forKey:kKey_Indication_HideComments];
@@ -115,7 +124,7 @@
 
 +(NSMutableDictionary *)newEmptyDrugDictWithCalculationType:(NSInteger)calculationType
 {
-    NSMutableDictionary *drugDict = [NSMutableDictionary dictionaryWithCapacity:3];
+    NSMutableDictionary *drugDict = [NSMutableDictionary dictionary];
     [drugDict setObject:kAlertTitle_NewDrug forKey:kKey_DrugDisplayName];
     [drugDict setObject:[NSNumber numberWithInteger:calculationType]   forKey:kKey_DoseCalculationType];
     [drugDict setObject:[NSNumber numberWithBool:YES]   forKey:kKey_DrugShowInList];
@@ -134,7 +143,7 @@
             break;
         case kDoseCalculationBy_Threshold:
             [drugDict setObject:[NSMutableArray array] forKey:kKey_Threshold_doses];
-            [drugDict setObject:[NSMutableArray array] forKey:kKey_Threshold_values];
+            [drugDict setObject:[NSMutableArray array] forKey:kKey_Threshold_Weights];
             [drugDict setObject:[NSMutableArray array] forKey:kKey_Threshold_Booleans];
             [drugDict setObject:[NSMutableArray array] forKey:kKey_Threshold_DoseForms];
             [drugDict setObject:[NSNumber numberWithDouble:0.0f] forKey:kKey_Threshold_MinWeight];
@@ -156,13 +165,18 @@
 
 +(NSData *)dataForDescriptionAttributedString:(NSAttributedString *)attributedString
 {
+    NSLog(@"000");
     if (attributedString.length == 0) {
         attributedString = [[NSAttributedString alloc] initWithString:@" "];
     }
     NSError *error = nil;
     NSRange range = NSMakeRange(0, attributedString.length);
     NSDictionary *dict = [NSDictionary dictionaryWithObject:NSRTFTextDocumentType forKey:NSDocumentTypeDocumentAttribute];
-    return [attributedString dataFromRange:range documentAttributes:dict error:&error];
+    NSData *data = [attributedString dataFromRange:range documentAttributes:dict error:&error];
+    if (data == nil) {
+        data = [NSData data];
+    }
+    return data;
 }
 
 +(NSAttributedString *)attributedStringFromDescriptionData:(NSData *)data

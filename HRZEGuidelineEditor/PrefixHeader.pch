@@ -116,7 +116,7 @@
 #define kKey_DoseUnits @"kKey_DoseUnits"
 
 //thresh
-#define kKey_Threshold_values @"kKey_Threshold_values"
+#define kKey_Threshold_Weights @"kKey_Threshold_Weights"
 #define kKey_Threshold_doses @"kKey_Threshold_doses"
 #define kKey_Threshold_Booleans @"kKey_Threshold_Booleans"
 #define kKey_Threshold_DoseForms @"kKey_Threshold_DoseForms"

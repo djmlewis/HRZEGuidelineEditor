@@ -60,7 +60,7 @@ NSTableViewDataSource, NSTableViewDelegate
 
 
 -(void)displayDrugInfo:(NSMutableDictionary *)drug;
-
+-(void)updateDrugFromViewAndUpdateCallingIndication:(BOOL)updateCallingIndication;
 
 
 

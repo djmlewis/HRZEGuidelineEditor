@@ -64,7 +64,7 @@
 {
     [self.myGuidelineDocument.dictionaryGuideline setObject:[HandyRoutines dataForDescriptionAttributedString:self.textViewGuidelineDescription.attributedString] forKey:kKey_GuidelineDescription];
     [self.myGuidelineDocument.dictionaryGuideline setObject:self.arrayIndicationsInGuideline forKey:kKey_GuidelineArrayOfIndications];
-    
+    [self.myGuidelineDocument updateChangeCount:NSChangeDone];
 }
 
 -(void)resignAllFirstresponders

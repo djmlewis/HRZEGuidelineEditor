@@ -65,12 +65,16 @@
 
 -(void)updateIndicationFromView
 {
-    [self.indicationBeingDisplayed setObject:self.arrayDrugsInIndication forKey:kKey_ArrayOfDrugs];
+    [self.embeddedDrugEditingViewController updateDrugFromViewAndUpdateCallingIndication:NO];
+    
+    [self.indicationBeingDisplayed setObject:[HandyRoutines arrayTakingAccountOfNullFromArray:self.arrayDrugsInIndication] forKey:kKey_ArrayOfDrugs];
     [self.indicationBeingDisplayed setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldIndicationName.stringValue] forKey:kKey_IndicationName];
     [self.indicationBeingDisplayed setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDosingInstructions.stringValue] forKey:kKey_IndicationDosingInstructions];
     [self.indicationBeingDisplayed setObject:[HandyRoutines dataForDescriptionAttributedString:self.textViewIndicationComments.attributedString] forKey:kKey_IndicationComments];
     [self.indicationBeingDisplayed setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDosingInstructions.stringValue] forKey:kKey_IndicationDosingInstructions];
     [self.indicationBeingDisplayed setObject:[NSNumber numberWithBool:self.checkBoxHideComments.state] forKey:kKey_Indication_HideComments];
+    
+    [self.myGuidelineDisplayingViewController updateDocumentFromView];
 }
 
 #pragma mark - NSTextFieldDelegate

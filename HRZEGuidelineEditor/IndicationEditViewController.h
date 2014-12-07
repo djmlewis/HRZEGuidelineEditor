@@ -38,6 +38,7 @@ NSBrowserDelegate
 
 
 -(void)updateIndicationDisplayForIndication:(NSMutableDictionary *)indication;
+-(void)updateIndicationFromView;
 
 
 @end

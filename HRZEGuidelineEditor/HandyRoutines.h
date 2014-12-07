@@ -23,6 +23,7 @@
 +(NSAttributedString *)attributedStringFromDescriptionData:(NSData *)data;
 
 +(NSString *)stringFromStringTakingAccountOfNull:(NSString *)string;
++(NSMutableArray *)arrayTakingAccountOfNullFromArray:(NSMutableArray *)arrayToCheck;
 
 +(NSNumberFormatter *)roundingFromRoundUpDownValue:(NSNumber *)updownKey andRoundingValue:(NSNumber *)roundVal;
 +(NSString *)roundingStringFromRoundUpDownValue:(NSNumber *)updownKey;
