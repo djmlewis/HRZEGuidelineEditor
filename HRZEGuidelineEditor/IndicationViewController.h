@@ -9,11 +9,11 @@
 #import <Cocoa/Cocoa.h>
 
 
-@class GuidelineDisplayingViewController;
-@class DrugEditingViewController;
+@class GuidelineViewController;
+@class DrugViewController;
 
 
-@interface IndicationEditViewController : NSViewController
+@interface IndicationViewController : NSViewController
 <
 NSTextFieldDelegate, NSTextViewDelegate,
 NSBrowserDelegate
@@ -21,10 +21,10 @@ NSBrowserDelegate
 
 
 
-@property (strong) GuidelineDisplayingViewController *myGuidelineDisplayingViewController;
-@property (strong) DrugEditingViewController *embeddedDrugEditingViewController;
+@property (strong) GuidelineViewController *myGuidelineDisplayingViewController;
+@property (strong) DrugViewController *embeddedDrugEditingViewController;
 
-@property (strong) NSMutableArray *arrayDrugsInIndication;
+//@property (strong) NSMutableArray *arrayDrugsInIndication;
 @property (strong) NSMutableDictionary *indicationBeingDisplayed;
 @property (unsafe_unretained) IBOutlet NSTextView *textViewIndicationComments;
 @property (weak) IBOutlet NSButton *checkBoxHideComments;
@@ -37,8 +37,9 @@ NSBrowserDelegate
 
 
 
--(void)updateIndicationDisplayForIndication:(NSMutableDictionary *)indication;
--(void)updateIndicationFromView;
+-(void)alignDisplayWithIndication:(NSMutableDictionary *)indication;
+-(void)alignIndicationWithView;
+-(void)saveGuideline;
 
 
 @end

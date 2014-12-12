@@ -165,7 +165,6 @@
 
 +(NSData *)dataForDescriptionAttributedString:(NSAttributedString *)attributedString
 {
-    NSLog(@"000");
     if (attributedString.length == 0) {
         attributedString = [[NSAttributedString alloc] initWithString:@" "];
     }

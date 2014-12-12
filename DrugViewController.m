@@ -6,35 +6,64 @@
 //  Copyright (c) 2014 eu.djml. All rights reserved.
 //
 
-#import "DrugEditingViewController.h"
-#import "IndicationEditViewController.h"
+#import "DrugViewController.h"
+#import "IndicationViewController.h"
 #import "PrefixHeader.pch"
 #import "HandyRoutines.h"
 #import "ThresholdTableCellView.h"
 
 
-@interface DrugEditingViewController ()
+@interface DrugViewController ()
 
 @end
 
-@implementation DrugEditingViewController
+@implementation DrugViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do view setup here.
-    if (self.drugDisplayed == nil) {
-        self.drugDisplayed = [NSMutableDictionary dictionary];
-    }
 }
 
+#pragma mark - NSTextFieldDelegate
+- (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor
+{
+    if ([control.identifier isEqualToString:@"textFieldDrugName"] && (fieldEditor.string.length == 0))
+    {
+        return NO;
+    }
+    [self alignDrugWithView];
+    return YES;
+}
+
+#pragma mark - NSTextViewdelegate
+- (void)textDidEndEditing:(NSNotification *)notification
+{
+    [self alignDrugWithView];
+}
+
+- (void)textViewDidChangeTypingAttributes:(NSNotification *)aNotification
+{
+    [self alignDrugWithView];
+}
+
+
+- (IBAction)settingsChanged:(id)sender {
+    [self alignDrugWithView];
+}
+
+-(void)saveGuideline
+{
+    [self.myIndicationEditViewController saveGuideline];
+}
 
 #pragma mark - Calculation Fields
 
 - (IBAction)checkBoxAllowDosageAdjustmentChanged:(NSButton *)sender
 {
     self.containerViewAdjustDosage.hidden = (sender.state == NSOffState);
-    [self updateDrugFromViewAndUpdateCallingIndication:YES];
+    [self alignDrugWithView];
 }
+
 
 -(void)zeroTheCalculationFields
 {
@@ -51,24 +80,17 @@
     [self.textFieldSingleDosagedescription setStringValue:@""];
     //thresh
     [self.textFieldThresholdMinimumWeightAllowed setStringValue:@""];
-    self.arrayThresholdBooleans = [NSMutableArray array];
-    self.arrayThresholdWeights = [NSMutableArray array];
-    self.arrayThresholdDoses = [NSMutableArray array];
-    self.arrayThresholdDoseForms = [NSMutableArray array];
     
     
 }
 
--(void)updateDrugFromViewAndUpdateCallingIndication:(BOOL)updateCallingIndication
+-(void)alignDrugWithView
 {
-    //clean it out --
-    [self.drugDisplayed removeAllObjects];
     
     [self.drugDisplayed setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDrugName.stringValue] forKey:kKey_DrugDisplayName];
     [self.drugDisplayed setObject:[HandyRoutines dataForDescriptionAttributedString:self.textViewDrugDescription.attributedString]  forKey:kKey_DrugInfoDescription];
     
-    NSInteger calcType = [self.tabViewCalculationType indexOfTabViewItem:[self.tabViewCalculationType selectedTabViewItem]];
-    switch (calcType)
+    switch ([self.tabViewCalculationType indexOfTabViewItem:[self.tabViewCalculationType selectedTabViewItem]])
     {
         case 0:
             [self.drugDisplayed setObject:[NSNumber numberWithInteger:kDoseCalculationBy_MgKg] forKey:kKey_DoseCalculationType];
@@ -92,13 +114,7 @@
         {
             [self.drugDisplayed setObject:[NSNumber numberWithInteger:kDoseCalculationBy_Threshold] forKey:kKey_DoseCalculationType];
             [self.drugDisplayed setObject:[NSNumber numberWithInteger:self.textFieldThresholdMinimumWeightAllowed.integerValue] forKey:kKey_Threshold_MinWeight];
-
             [self reloadTableViewSavingSelection:YES];
-            [self.drugDisplayed setObject:[HandyRoutines arrayTakingAccountOfNullFromArray:self.arrayThresholdBooleans] forKey:kKey_Threshold_Booleans];
-            [self.drugDisplayed setObject:[HandyRoutines arrayTakingAccountOfNullFromArray:self.arrayThresholdWeights] forKey:kKey_Threshold_Weights];
-            [self.drugDisplayed setObject:[HandyRoutines arrayTakingAccountOfNullFromArray:self.arrayThresholdDoses] forKey:kKey_Threshold_doses];
-            [self.drugDisplayed setObject:[HandyRoutines arrayTakingAccountOfNullFromArray:self.arrayThresholdDoseForms] forKey:kKey_Threshold_DoseForms];
-
         }
             break;
         case 2:
@@ -110,13 +126,11 @@
             break;
     }
     
-    if (updateCallingIndication) {
-        [self.myIndicationEditViewController updateIndicationFromView];
-    }
+    [self saveGuideline];
     
 }
 
--(void)displayDrugInfo:(NSMutableDictionary *)drug
+-(void)alignViewWithDrug:(NSMutableDictionary *)drug
 {
     self.drugDisplayed = drug;
     
@@ -148,10 +162,6 @@
         {
             [self.tabViewCalculationType selectTabViewItemAtIndex:1];
             [self.textFieldThresholdMinimumWeightAllowed  setIntegerValue:[[drug objectForKey:kKey_Threshold_MinWeight] integerValue]];
-            self.arrayThresholdBooleans = (NSMutableArray *)[drug objectForKey:kKey_Threshold_Booleans];
-            self.arrayThresholdWeights = (NSMutableArray *)[drug objectForKey:kKey_Threshold_Weights];
-            self.arrayThresholdDoses = (NSMutableArray *)[drug objectForKey:kKey_Threshold_doses];
-            self.arrayThresholdDoseForms = (NSMutableArray *)[drug objectForKey:kKey_Threshold_DoseForms];
             [self reloadTableViewSavingSelection:NO];
         }
             break;
@@ -183,8 +193,8 @@
 {
     if ([aTableView.identifier isEqualToString:@"tableViewThresholds"]) {
         NSInteger count=0;
-        if (self.arrayThresholdBooleans)
-            count=[self.arrayThresholdBooleans count];
+        if ((NSMutableArray *)[self.drugDisplayed objectForKey:kKey_Threshold_Booleans])
+            count=[(NSMutableArray *)[self.drugDisplayed objectForKey:kKey_Threshold_Booleans] count];
         return count;
     }
     return 0;
@@ -210,8 +220,9 @@
 - (void)tableView:(NSTableView *)tableView  didRemoveRowView:(NSTableRowView *)rowView  forRow:(NSInteger)row
 {
     if ([tableView.identifier isEqualToString:@"tableViewThresholds"]) {
-        if (row != -1 && row<self.arrayThresholdBooleans.count) {
-            [[tableView viewAtColumn:0 row:row makeIfNecessary:NO] updateDrugFromView];
+        if (row != -1 //being moved off screen and not deleted
+            && row<[(NSMutableArray *)[self.drugDisplayed objectForKey:kKey_Threshold_Booleans] count]) {
+            [(ThresholdTableCellView *)[tableView viewAtColumn:0 row:row makeIfNecessary:NO] alignThresholdWithView];
         }
     }
 }
@@ -219,7 +230,7 @@
 -(void)forceUpdateOfThresholdCells
 {
     [self.tableViewThresholds enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row) {
-        [(ThresholdTableCellView *)[rowView viewAtColumn:0] updateDrugFromView];
+        //[(ThresholdTableCellView *)[rowView viewAtColumn:0] alignThresholdWithView];
     }];
 }
 

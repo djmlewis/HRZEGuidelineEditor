@@ -8,14 +8,14 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class DrugEditingViewController;
+@class DrugViewController;
 
 @interface ThresholdTableCellView : NSTableCellView
 <
     NSTextFieldDelegate
 >
 
-@property (strong) DrugEditingViewController *myDrugEditingViewController;
+@property (strong) DrugViewController *myDrugEditingViewController;
 @property NSInteger callingRow;
 
 @property (weak) IBOutlet NSSegmentedControl *segmentThresholdBoolean;
@@ -25,9 +25,9 @@
 
 
 
--(void)zeroTheCalculationFields;
+-(void)zeroThresholdFields;
 
--(void)setupCellFromDrugEditingViewController:(DrugEditingViewController *)theDrugEditingViewController forArrayRow:(NSInteger)arrayRow;
--(void)updateDrugFromView;
+-(void)setupCellFromDrugEditingViewController:(DrugViewController *)theDrugEditingViewController forArrayRow:(NSInteger)arrayRow;
+-(void)alignThresholdWithView;
 
 @end

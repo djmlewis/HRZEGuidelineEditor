@@ -8,7 +8,7 @@
 
 #import "GuidelineDocument.h"
 #import "HandyRoutines.h"
-#import "GuidelineDisplayingViewController.h"
+#import "GuidelineViewController.h"
 #import "PrefixHeader.pch"
 
 @interface GuidelineDocument ()
@@ -50,7 +50,7 @@
     
     //NSLog(@"dataOfType: %@",typeName);
     
-    [self.myGuidelineDisplayingViewController updateDocumentFromView];
+    [self.myGuidelineDisplayingViewController alignGuidelineWithView];
 
     return [HandyRoutines serializedDictionaryDataFromDictionary:self.dictionaryGuideline];
 

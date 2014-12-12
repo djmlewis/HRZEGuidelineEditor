@@ -8,22 +8,22 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class IndicationEditViewController;
+@class IndicationViewController;
 
 
-@interface DrugEditingViewController : NSViewController
+@interface DrugViewController : NSViewController
 <
-NSTextFieldDelegate,
+NSTextFieldDelegate, NSTextViewDelegate,
 NSTableViewDataSource, NSTableViewDelegate
 >
 
-@property (strong) IndicationEditViewController *myIndicationEditViewController;
+@property (strong) IndicationViewController *myIndicationEditViewController;
 @property (strong) NSMutableDictionary *drugDisplayed;
 
-@property (strong) NSMutableArray *arrayThresholdBooleans;
-@property (strong) NSMutableArray *arrayThresholdWeights;
-@property (strong) NSMutableArray *arrayThresholdDoses;
-@property (strong) NSMutableArray *arrayThresholdDoseForms;
+//@property (strong) NSMutableArray *arrayThresholdBooleans;
+//@property (strong) NSMutableArray *arrayThresholdWeights;
+//@property (strong) NSMutableArray *arrayThresholdDoses;
+//@property (strong) NSMutableArray *arrayThresholdDoseForms;
 
 
 
@@ -32,6 +32,7 @@ NSTableViewDataSource, NSTableViewDelegate
 @property (unsafe_unretained) IBOutlet NSTextView *textViewDrugDescription;
 @property (weak) IBOutlet NSButton *checkboxShowDrugInList;
 @property (weak) IBOutlet NSTabView *tabViewCalculationType;
+@property (weak) IBOutlet NSPopUpButton *popupButtonCalculationType;
 
 
 //mg/Kg
@@ -55,13 +56,9 @@ NSTableViewDataSource, NSTableViewDelegate
 
 
 
-
-
-
-
--(void)displayDrugInfo:(NSMutableDictionary *)drug;
--(void)updateDrugFromViewAndUpdateCallingIndication:(BOOL)updateCallingIndication;
-
+-(void)alignViewWithDrug:(NSMutableDictionary *)drug;
+-(void)alignDrugWithView;
+-(void)saveGuideline;
 
 
 @end

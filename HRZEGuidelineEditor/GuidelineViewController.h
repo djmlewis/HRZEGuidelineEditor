@@ -6,12 +6,12 @@
 //  Copyright (c) 2014 eu.djml. All rights reserved.
 //
 @class GuidelineDocument;
-@class IndicationEditViewController;
+@class IndicationViewController;
 
 
 #import <Cocoa/Cocoa.h>
 
-@interface GuidelineDisplayingViewController : NSViewController
+@interface GuidelineViewController : NSViewController
 <
     NSTextFieldDelegate, NSTextViewDelegate,
 NSTableViewDataSource, NSTableViewDelegate
@@ -23,8 +23,8 @@ NSTableViewDataSource, NSTableViewDelegate
 
 
 @property (strong) GuidelineDocument *myGuidelineDocument;
-@property (strong) IndicationEditViewController *embeddedIndicationEditViewController;
-@property (strong) NSMutableArray *arrayIndicationsInGuideline;
+@property (strong) IndicationViewController *embeddedIndicationEditViewController;
+//@property (strong) NSMutableArray *arrayIndicationsInGuideline;
 
 @property (unsafe_unretained) IBOutlet NSTextView *textViewGuidelineDescription;
 @property (weak) IBOutlet NSSegmentedControl *segmentAddRemoveIndication;
@@ -32,9 +32,9 @@ NSTableViewDataSource, NSTableViewDelegate
 @property (weak) IBOutlet NSTableView *tableViewIndications;
 
 
--(void)updateDocumentFromView;
+-(void)alignGuidelineWithView;
 -(void)reloadTableViewSavingSelection:(BOOL)saveSelection;
-
+-(void)saveGuideline;
 
 
 

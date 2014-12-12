@@ -8,12 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class GuidelineDisplayingViewController;
+@class GuidelineViewController;
 
 @interface GuidelineDocument : NSDocument
 
 
-@property (strong)  GuidelineDisplayingViewController *myGuidelineDisplayingViewController;
+@property (strong)  GuidelineViewController *myGuidelineDisplayingViewController;
 
 @property (strong) NSMutableDictionary *dictionaryGuideline;
 

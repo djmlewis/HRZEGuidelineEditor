@@ -6,38 +6,26 @@
 //  Copyright (c) 2014 eu.djml. All rights reserved.
 //
 
-#import "IndicationEditViewController.h"
+#import "IndicationViewController.h"
 #import "PrefixHeader.pch"
 #import "HandyRoutines.h"
-#import "GuidelineDisplayingViewController.h"
-#import "DrugEditingViewController.h"   
+#import "GuidelineViewController.h"
+#import "DrugViewController.h"   
 
 
 
-@interface IndicationEditViewController ()
+@interface IndicationViewController ()
 
 @end
 
-@implementation IndicationEditViewController
+@implementation IndicationViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do view setup here.
-    [self correctForNilObjects];
 }
 
--(void)correctForNilObjects
-{
-    if (self.arrayDrugsInIndication == nil)
-    {
-        self.arrayDrugsInIndication = [NSMutableArray array];
-    }
-    if (self.indicationBeingDisplayed == nil)
-    {
-        self.indicationBeingDisplayed = [NSMutableDictionary dictionary];
-    }
-}
 
 -(void)viewWillAppear
 {
@@ -46,16 +34,15 @@
     self.view.layer.backgroundColor = [NSColor lightGrayColor].CGColor;
 }
 
-
--(void)updateIndicationDisplayForIndication:(NSMutableDictionary *)indication
+-(void)saveGuideline
 {
-    //first take on board any changes
-    [self updateIndicationFromView];
-    
-    
+    [self.myGuidelineDisplayingViewController saveGuideline];
+}
+
+
+-(void)alignDisplayWithIndication:(NSMutableDictionary *)indication
+{
     self.indicationBeingDisplayed = indication;
-    self.arrayDrugsInIndication = [indication objectForKey:kKey_ArrayOfDrugs];
-    [self correctForNilObjects];
     [self reloadTableViewSavingSelection:NO];
     [self.textFieldIndicationName setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationName]]];
     [self.textFieldDosingInstructions setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationDosingInstructions]]];
@@ -63,35 +50,37 @@
     [self.checkBoxHideComments setState:[[indication objectForKey:kKey_Indication_HideComments] boolValue]];
 }
 
--(void)updateIndicationFromView
-{
-    [self.embeddedDrugEditingViewController updateDrugFromViewAndUpdateCallingIndication:NO];
-    
-    [self.indicationBeingDisplayed setObject:[HandyRoutines arrayTakingAccountOfNullFromArray:self.arrayDrugsInIndication] forKey:kKey_ArrayOfDrugs];
+-(void)alignIndicationWithView
+{   
     [self.indicationBeingDisplayed setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldIndicationName.stringValue] forKey:kKey_IndicationName];
     [self.indicationBeingDisplayed setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDosingInstructions.stringValue] forKey:kKey_IndicationDosingInstructions];
     [self.indicationBeingDisplayed setObject:[HandyRoutines dataForDescriptionAttributedString:self.textViewIndicationComments.attributedString] forKey:kKey_IndicationComments];
     [self.indicationBeingDisplayed setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDosingInstructions.stringValue] forKey:kKey_IndicationDosingInstructions];
     [self.indicationBeingDisplayed setObject:[NSNumber numberWithBool:self.checkBoxHideComments.state] forKey:kKey_Indication_HideComments];
     
-    [self.myGuidelineDisplayingViewController updateDocumentFromView];
+    [self saveGuideline];
 }
 
 #pragma mark - NSTextFieldDelegate
 - (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor
 {
-    if ([control.identifier isEqualToString:@"textFieldIndicationName"])
+    if ([control.identifier isEqualToString:@"textFieldIndicationName"] && (fieldEditor.string.length == 0))
     {
-        if (fieldEditor.string.length == 0) {
             return NO;
-        }
-        [self.indicationBeingDisplayed setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldIndicationName.stringValue] forKey:kKey_IndicationName];
-        [self.myGuidelineDisplayingViewController reloadTableViewSavingSelection:YES];
-        return YES;
     }
-    
-    
+    [self alignIndicationWithView];
     return YES;
+}
+
+#pragma mark - NSTextViewdelegate
+- (void)textDidEndEditing:(NSNotification *)notification
+{
+    [self alignIndicationWithView];
+}
+
+- (void)textViewDidChangeTypingAttributes:(NSNotification *)aNotification
+{
+    [self alignIndicationWithView];
 }
 
 #pragma mark - Drugs
@@ -103,10 +92,9 @@
 
 -(void)displayDrugInfoForRow:(NSInteger)row
 {
-    if (row<self.arrayDrugsInIndication.count)
+    if (row<[(NSMutableArray *)[self.indicationBeingDisplayed objectForKey:kKey_ArrayOfDrugs] count])
     {
-        [self updateIndicationFromView];
-        [self.embeddedDrugEditingViewController displayDrugInfo:[self.arrayDrugsInIndication objectAtIndex:row]];
+        [self.embeddedDrugEditingViewController alignViewWithDrug:[(NSMutableArray *)[self.indicationBeingDisplayed objectForKey:kKey_ArrayOfDrugs] objectAtIndex:row]];
         self.embeddedDrugEditingViewController.view.hidden = NO;
         [self reloadTableViewSavingSelection:YES];
     }
@@ -117,7 +105,7 @@
     if ([segue.identifier isEqualToString:@"embedDrugEditVC"])
     {
         //comes first before we get a document
-        self.embeddedDrugEditingViewController = (DrugEditingViewController *)segue.destinationController;
+        self.embeddedDrugEditingViewController = (DrugViewController *)segue.destinationController;
         self.embeddedDrugEditingViewController.myIndicationEditViewController = self;
         self.embeddedDrugEditingViewController.view.hidden = YES;
     }
@@ -141,8 +129,8 @@
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
     NSInteger count=0;
-    if (self.arrayDrugsInIndication)
-        count=[self.arrayDrugsInIndication count];
+    if ((NSMutableArray *)[self.indicationBeingDisplayed objectForKey:kKey_ArrayOfDrugs] != nil)
+        count=[(NSMutableArray *)[self.indicationBeingDisplayed objectForKey:kKey_ArrayOfDrugs] count];
     return count;
 }
 
@@ -154,7 +142,7 @@
     NSTableCellView *result = [tableView makeViewWithIdentifier:@"drugs" owner:self];
     
     // Set the stringValue of the cell's text field to the nameArray value at row
-    NSMutableDictionary *indicationDictAtRow = [self.arrayDrugsInIndication objectAtIndex:row];
+    NSMutableDictionary *indicationDictAtRow = [(NSMutableArray *)[self.indicationBeingDisplayed objectForKey:kKey_ArrayOfDrugs] objectAtIndex:row];
     result.textField.stringValue = [HandyRoutines stringFromStringTakingAccountOfNull:[indicationDictAtRow objectForKey:kKey_DrugDisplayName]];
     
     // Return the result
