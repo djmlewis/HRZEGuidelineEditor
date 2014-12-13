@@ -26,15 +26,15 @@
 
 -(void)alignThresholdWithView
 {
-    if (self.callingRow<[(NSMutableArray *)[self.myDrugEditingViewController.drugDisplayed objectForKey:kKey_Threshold_Booleans] count]) {
-        [(NSMutableArray *)[self.myDrugEditingViewController.drugDisplayed objectForKey:kKey_Threshold_Booleans] replaceObjectAtIndex:self.callingRow withObject:[NSNumber numberWithInteger:self.segmentThresholdBoolean.selectedSegment]];
-        [(NSMutableArray *)[self.myDrugEditingViewController.drugDisplayed objectForKey:kKey_Threshold_DoseForms] replaceObjectAtIndex:self.callingRow withObject:[HandyRoutines stringFromStringTakingAccountOfNull:[self.textFieldThresholdDosageForm stringValue]]];
-        [(NSMutableArray *)[self.myDrugEditingViewController.drugDisplayed objectForKey:kKey_Threshold_doses] replaceObjectAtIndex:self.callingRow withObject:[HandyRoutines stringFromStringTakingAccountOfNull:[self.textFieldThresholdDose stringValue]]];
-        [(NSMutableArray *)[self.myDrugEditingViewController.drugDisplayed objectForKey:kKey_Threshold_Weights] replaceObjectAtIndex:self.callingRow withObject:[NSNumber numberWithInteger:[self.textFieldThresholdWeight integerValue]]];
+    if (self.allowUpdatesFromView)
+    {
+        [self.threshold setObject:[NSNumber numberWithInteger:self.textFieldThresholdWeight.integerValue] forKey:kKey_Threshold_Weights];
+        [self.threshold setObject:[NSNumber numberWithInteger:self.segmentThresholdBoolean.selectedSegment] forKey:kKey_Threshold_Booleans];
+        [self.threshold setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldThresholdDose.stringValue] forKey:kKey_Threshold_doses];
+        [self.threshold setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldThresholdDosageForm.stringValue] forKey:kKey_Threshold_DoseForms];
         
         [self.myDrugEditingViewController saveGuideline];
     }
-
 }
 
 -(void)zeroThresholdFields
@@ -46,18 +46,17 @@
     
 }
 
-
-
--(void)setupCellFromDrugEditingViewController:(DrugViewController *)theDrugEditingViewController forArrayRow:(NSInteger)arrayRow
+-(void)setupCellFromDrugEditingViewController:(DrugViewController *)theDrugEditingViewController withThreshold:(NSMutableDictionary *)threshold
 {
+    self.allowUpdatesFromView = NO;
     self.myDrugEditingViewController = theDrugEditingViewController;
-    self.callingRow = arrayRow;
+    self.threshold = threshold;
     [self zeroThresholdFields];
-    
-    [self.textFieldThresholdWeight setIntegerValue:[(NSNumber *)[(NSMutableArray *)[self.myDrugEditingViewController.drugDisplayed objectForKey:kKey_Threshold_Weights] objectAtIndex:arrayRow] integerValue]];
-    [self.textFieldThresholdDose setStringValue:[(NSMutableArray *)[self.myDrugEditingViewController.drugDisplayed objectForKey:kKey_Threshold_doses] objectAtIndex:arrayRow]];
-    [self.textFieldThresholdDosageForm setStringValue:[(NSMutableArray *)[self.myDrugEditingViewController.drugDisplayed objectForKey:kKey_Threshold_DoseForms] objectAtIndex:arrayRow]];
-    [self.segmentThresholdBoolean setSelectedSegment:[(NSNumber *)[(NSMutableArray *)[self.myDrugEditingViewController.drugDisplayed objectForKey:kKey_Threshold_Booleans] objectAtIndex:arrayRow] integerValue]];
+    [self.textFieldThresholdWeight setIntegerValue:[(NSNumber *)[threshold objectForKey:kKey_Threshold_Weights] integerValue]];
+    [self.textFieldThresholdDose setStringValue:[threshold objectForKey:kKey_Threshold_doses]];
+    [self.textFieldThresholdDosageForm setStringValue:[threshold objectForKey:kKey_Threshold_DoseForms]];
+    [self.segmentThresholdBoolean setSelectedSegment:[(NSNumber *)[threshold objectForKey:kKey_Threshold_Booleans] integerValue]];
+    self.allowUpdatesFromView = YES;
 
 }
 

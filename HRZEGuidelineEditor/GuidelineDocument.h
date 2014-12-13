@@ -15,7 +15,7 @@
 
 @property (strong)  GuidelineViewController *myGuidelineDisplayingViewController;
 
-@property (strong) NSMutableDictionary *dictionaryGuideline;
+@property (strong) NSMutableDictionary *guideline;
 
 
 

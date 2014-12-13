@@ -121,6 +121,7 @@
 #define kKey_Threshold_Booleans @"kKey_Threshold_Booleans"
 #define kKey_Threshold_DoseForms @"kKey_Threshold_DoseForms"
 #define kKey_Threshold_MinWeight @"kKey_Threshold_MinWeight"
+#define kKey_Threshold_Array_Thresholds @"kKey_Threshold_Array_Thresholds"
 
 //single
 #define kKey_SingleDoseInstructions @"kKey_SingleDoseInstructions"

@@ -19,13 +19,13 @@ NSTextFieldDelegate, NSTextViewDelegate,
 NSBrowserDelegate
 >
 
+@property BOOL allowUpdatesFromView;
 
 
 @property (strong) GuidelineViewController *myGuidelineDisplayingViewController;
 @property (strong) DrugViewController *embeddedDrugEditingViewController;
 
-//@property (strong) NSMutableArray *arrayDrugsInIndication;
-@property (strong) NSMutableDictionary *indicationBeingDisplayed;
+@property (strong) NSMutableDictionary *indicationInPlay;
 @property (unsafe_unretained) IBOutlet NSTextView *textViewIndicationComments;
 @property (weak) IBOutlet NSButton *checkBoxHideComments;
 @property (weak) IBOutlet NSTextField *textFieldDosingInstructions;

@@ -19,16 +19,16 @@ NSTableViewDataSource, NSTableViewDelegate
 
 
 
+@property BOOL allowUpdatesFromView;
 
 
 
 @property (strong) GuidelineDocument *myGuidelineDocument;
 @property (strong) IndicationViewController *embeddedIndicationEditViewController;
-//@property (strong) NSMutableArray *arrayIndicationsInGuideline;
+
 
 @property (unsafe_unretained) IBOutlet NSTextView *textViewGuidelineDescription;
 @property (weak) IBOutlet NSSegmentedControl *segmentAddRemoveIndication;
-
 @property (weak) IBOutlet NSTableView *tableViewIndications;
 
 

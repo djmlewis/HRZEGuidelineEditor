@@ -14,8 +14,11 @@
 <
     NSTextFieldDelegate
 >
+@property BOOL allowUpdatesFromView;
 
 @property (strong) DrugViewController *myDrugEditingViewController;
+@property (strong) NSMutableDictionary *threshold;
+
 @property NSInteger callingRow;
 
 @property (weak) IBOutlet NSSegmentedControl *segmentThresholdBoolean;
@@ -27,7 +30,7 @@
 
 -(void)zeroThresholdFields;
 
--(void)setupCellFromDrugEditingViewController:(DrugViewController *)theDrugEditingViewController forArrayRow:(NSInteger)arrayRow;
+-(void)setupCellFromDrugEditingViewController:(DrugViewController *)theDrugEditingViewController withThreshold:(NSMutableDictionary *)threshold;
 -(void)alignThresholdWithView;
 
 @end

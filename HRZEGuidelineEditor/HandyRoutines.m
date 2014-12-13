@@ -122,7 +122,7 @@
 
 
 
-+(NSMutableDictionary *)newEmptyDrugDictWithCalculationType:(NSInteger)calculationType
++(NSMutableDictionary *)newEmptyDrugWithCalculationType:(NSInteger)calculationType
 {
     NSMutableDictionary *drugDict = [NSMutableDictionary dictionary];
     [drugDict setObject:kAlertTitle_NewDrug forKey:kKey_DrugDisplayName];
@@ -142,10 +142,7 @@
             [drugDict setObject:[NSNumber numberWithInteger:1] forKey:kKey_ValueOfRounding];
             break;
         case kDoseCalculationBy_Threshold:
-            [drugDict setObject:[NSMutableArray array] forKey:kKey_Threshold_doses];
-            [drugDict setObject:[NSMutableArray array] forKey:kKey_Threshold_Weights];
-            [drugDict setObject:[NSMutableArray array] forKey:kKey_Threshold_Booleans];
-            [drugDict setObject:[NSMutableArray array] forKey:kKey_Threshold_DoseForms];
+            [drugDict setObject:[NSMutableArray array] forKey:kKey_Threshold_Array_Thresholds];
             [drugDict setObject:[NSNumber numberWithDouble:0.0f] forKey:kKey_Threshold_MinWeight];
             break;
         case kDoseCalculationBy_SingleDose:
@@ -157,6 +154,16 @@
     return drugDict;
 }
 
++(NSMutableDictionary *)newEmptyThreshold
+{
+    NSMutableDictionary *threshold = [NSMutableDictionary dictionary];
+    [threshold setObject:[NSNumber numberWithDouble:1.0f] forKey:kKey_Threshold_Weights];
+    [threshold setObject:[NSNumber numberWithInteger:4] forKey:kKey_Threshold_Booleans];
+    [threshold setObject:@"" forKey:kKey_Threshold_doses];
+    [threshold setObject:@"" forKey:kKey_Threshold_DoseForms];
+
+    return threshold;
+}
 
 +(void)swapRowFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath inArray:(NSMutableArray *)arrayToSwap
 {

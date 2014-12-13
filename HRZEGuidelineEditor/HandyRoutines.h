@@ -31,11 +31,12 @@
 +(NSString *)predecateStringForPredicate:(NSNumber *)predicate;
 +(BOOL)leftSide:(CGFloat)leftSide is:(NSInteger)predicate thanRightSide:(CGFloat)rightSide;
 
-+(NSMutableDictionary *)newEmptyIndicationWithName:(NSString *)indicationName;
 +(NSMutableDictionary *)newEmptyGuideline;
++(NSMutableDictionary *)newEmptyIndicationWithName:(NSString *)indicationName;
++(NSMutableDictionary *)newEmptyDrugWithCalculationType:(NSInteger)calculationType;
++(NSMutableDictionary *)newEmptyThreshold;
 +(NSMutableDictionary *)newEmptyTablet;
 +(NSMutableDictionary *)newEmptyTabletsDictionary;
-+(NSMutableDictionary *)newEmptyDrugDictWithCalculationType:(NSInteger)calculationType;
 +(NSMutableDictionary *)newEmptyDrugInfoWithName:(NSString *)infoName;
 
 @end

@@ -21,7 +21,7 @@
     self = [super init];
     if (self) {
         // Add your subclass-specific initialization here.
-        self.dictionaryGuideline = [HandyRoutines newEmptyGuideline];
+        self.guideline = [HandyRoutines newEmptyGuideline];
 
     }
     return self;
@@ -52,7 +52,7 @@
     
     [self.myGuidelineDisplayingViewController alignGuidelineWithView];
 
-    return [HandyRoutines serializedDictionaryDataFromDictionary:self.dictionaryGuideline];
+    return [HandyRoutines serializedDictionaryDataFromDictionary:self.guideline];
 
     return nil;
 }
@@ -65,9 +65,9 @@
     
     //NSLog(@"dataOfType: %@",typeName);
     
-    self.dictionaryGuideline = [HandyRoutines dictionaryFromPropertyListData:data];
+    self.guideline = [HandyRoutines dictionaryFromPropertyListData:data];
 
-    return self.dictionaryGuideline != nil;
+    return self.guideline != nil;
 }
 
 

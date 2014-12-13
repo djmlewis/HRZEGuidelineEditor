@@ -19,6 +19,7 @@
     [super viewDidLoad];
 
     // Do any additional setup after loading the view.
+    self.allowUpdatesFromView = YES;
 }
 
 -(void)viewWillAppear
@@ -26,11 +27,10 @@
     [super viewWillAppear];
     self.myGuidelineDocument = [[[self.view window] windowController] document];
     self.myGuidelineDocument.myGuidelineDisplayingViewController = self;
-    if ((NSMutableArray *)[self.myGuidelineDocument.dictionaryGuideline objectForKey:kKey_GuidelineArrayOfIndications] == nil)
+    if ((NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] == nil)
     {
-       [self.myGuidelineDocument.dictionaryGuideline setObject:[NSMutableArray array] forKey:kKey_GuidelineArrayOfIndications] ;
+       [self.myGuidelineDocument.guideline setObject:[NSMutableArray array] forKey:kKey_GuidelineArrayOfIndications] ;
     }
-
     [self alignViewWithGuideline];
 }
 
@@ -55,17 +55,24 @@
 -(void)alignViewWithGuideline
 {
     //comed after the embed segue
-
-    [[self.textViewGuidelineDescription textStorage] setAttributedString:[HandyRoutines attributedStringFromDescriptionData:[self.myGuidelineDocument.dictionaryGuideline objectForKey:kKey_GuidelineDescription]]];
+    self.allowUpdatesFromView = NO;
+    [[self.textViewGuidelineDescription textStorage] setAttributedString:[HandyRoutines attributedStringFromDescriptionData:[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineDescription]]];
     [self reloadTableViewSavingSelection:YES];
     [self displayFirstIndication];
+    self.allowUpdatesFromView = YES;
+
 }
 
 -(void)alignGuidelineWithView
 {
-    [self.myGuidelineDocument.dictionaryGuideline setObject:[HandyRoutines dataForDescriptionAttributedString:self.textViewGuidelineDescription.attributedString] forKey:kKey_GuidelineDescription];
-    //[self.myGuidelineDocument.dictionaryGuideline setObject:self.arrayIndicationsInGuideline forKey:kKey_GuidelineArrayOfIndications];
-    [self saveGuideline];
+    if (self.allowUpdatesFromView)
+    {
+        self.allowUpdatesFromView = NO;
+        [self.myGuidelineDocument.guideline setObject:[HandyRoutines dataForDescriptionAttributedString:self.textViewGuidelineDescription.attributedString] forKey:kKey_GuidelineDescription];
+        [self saveGuideline];
+        self.allowUpdatesFromView = YES;
+        
+    }
 }
 
 -(void)resignAllFirstresponders
@@ -104,20 +111,20 @@
 -(void)addNewIndicationWithName:(NSString *)name
 {
     NSMutableDictionary *indication = [HandyRoutines newEmptyIndicationWithName:name];
-    [(NSMutableArray *)[self.myGuidelineDocument.dictionaryGuideline objectForKey:kKey_GuidelineArrayOfIndications] addObject:indication];
+    [(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] addObject:indication];
     [self reloadTableViewSavingSelection:NO];
-    [self.tableViewIndications selectRowIndexes:[NSIndexSet indexSetWithIndex:[(NSMutableArray *)[self.myGuidelineDocument.dictionaryGuideline objectForKey:kKey_GuidelineArrayOfIndications] count]-1] byExtendingSelection:NO];
-    [self displayIndicationInfoForRow:[(NSMutableArray *)[self.myGuidelineDocument.dictionaryGuideline objectForKey:kKey_GuidelineArrayOfIndications] count]-1];
+    [self.tableViewIndications selectRowIndexes:[NSIndexSet indexSetWithIndex:[(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] count]-1] byExtendingSelection:NO];
+    [self displayIndicationInfoForRow:[(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] count]-1];
     [self saveGuideline];
 }
 
 -(void)deleteSelectedIndication
 {
     NSInteger row = [self.tableViewIndications selectedRow];
-    if (row >=0 && row<[(NSMutableArray *)[self.myGuidelineDocument.dictionaryGuideline objectForKey:kKey_GuidelineArrayOfIndications]count])
+    if (row >=0 && row<[(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications]count])
     {
         self.embeddedIndicationEditViewController.view.hidden = YES;
-        [(NSMutableArray *)[self.myGuidelineDocument.dictionaryGuideline objectForKey:kKey_GuidelineArrayOfIndications] removeObjectAtIndex:row];
+        [(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] removeObjectAtIndex:row];
         [self reloadTableViewSavingSelection:NO];
         [self saveGuideline];
         [self displayFirstIndication];
@@ -126,7 +133,7 @@
 
 -(void)displayFirstIndication
 {
-    if ([(NSMutableArray *)[self.myGuidelineDocument.dictionaryGuideline objectForKey:kKey_GuidelineArrayOfIndications] count] > 0) {
+    if ([(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] count] > 0) {
         [self.tableViewIndications selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
         [self displayIndicationInfoForRow:0];
     }
@@ -149,8 +156,8 @@
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
     NSInteger count=0;
-    if ((NSMutableArray *)[self.myGuidelineDocument.dictionaryGuideline objectForKey:kKey_GuidelineArrayOfIndications] != nil)
-        count=[(NSMutableArray *)[self.myGuidelineDocument.dictionaryGuideline objectForKey:kKey_GuidelineArrayOfIndications] count];
+    if ((NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] != nil)
+        count=[(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] count];
     return count;
 }
 
@@ -162,7 +169,7 @@
     NSTableCellView *result = [tableView makeViewWithIdentifier:@"indications" owner:self];
     
     // Set the stringValue of the cell's text field to the nameArray value at row
-    NSMutableDictionary *indicationDictAtRow = [(NSMutableArray *)[self.myGuidelineDocument.dictionaryGuideline objectForKey:kKey_GuidelineArrayOfIndications] objectAtIndex:row];
+    NSMutableDictionary *indicationDictAtRow = [(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] objectAtIndex:row];
     result.textField.stringValue = [HandyRoutines stringFromStringTakingAccountOfNull: [indicationDictAtRow objectForKey:kKey_IndicationName]];
 
     // Return the result
@@ -178,8 +185,8 @@
 
 -(void)displayIndicationInfoForRow:(NSInteger)row
 {
-    if (row<[(NSMutableArray *)[self.myGuidelineDocument.dictionaryGuideline objectForKey:kKey_GuidelineArrayOfIndications] count]) {
-        [self.embeddedIndicationEditViewController alignDisplayWithIndication: [(NSMutableArray *)[self.myGuidelineDocument.dictionaryGuideline objectForKey:kKey_GuidelineArrayOfIndications] objectAtIndex:row]];
+    if (row<[(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] count]) {
+        [self.embeddedIndicationEditViewController alignDisplayWithIndication: [(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] objectAtIndex:row]];
         self.embeddedIndicationEditViewController.view.hidden = NO;
         [self reloadTableViewSavingSelection:YES];
     }
