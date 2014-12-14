@@ -28,9 +28,13 @@
 #pragma mark - NSTextFieldDelegate
 - (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor
 {
-    if ([control.identifier isEqualToString:@"textFieldDrugName"] && (fieldEditor.string.length == 0))
+    if ([control.identifier isEqualToString:@"textFieldDrugName"])
     {
-        return NO;
+        if ((fieldEditor.string.length == 0))
+        {
+            return NO;
+        }
+        [self.myIndicationEditViewController reloadTableViewSavingSelection:YES];
     }
     [self alignDrugWithView];
     return YES;
@@ -61,13 +65,21 @@
 
 - (IBAction)checkBoxAllowDosageAdjustmentChanged:(NSButton *)sender
 {
-    self.containerViewAdjustDosage.hidden = (sender.state == NSOffState);
+    [self visibilityOfAdjustDoseFieldsIsHidden:(sender.state == NSOffState)];
     [self alignDrugWithView];
 }
 
 - (IBAction)popupCalculationTypeChanges:(NSPopUpButton *)sender {
     [self.tabViewCalculationType selectTabViewItemAtIndex:self.popupButtonCalculationType.indexOfSelectedItem];
     [self alignDrugWithView];
+}
+
+-(void)visibilityOfAdjustDoseFieldsIsHidden:(BOOL)hidden
+{
+    self.textFieldLabelMaxMgKg.hidden = hidden;
+    self.textFieldLabelMinMgKg.hidden = hidden;
+    self.textFieldMaxDosage.hidden = hidden;
+    self.textFieldMinDosage.hidden = hidden;
 }
 
 -(void)zeroTheCalculationFields
@@ -79,7 +91,7 @@
     [self.textFieldMaximumFinalDose setStringValue:@""];
     [self.textFieldRoundingValue setStringValue:@""];
     [self.checkboxAllowAdjustment setState:NSOffState];
-    self.containerViewAdjustDosage.hidden = YES;
+    [self visibilityOfAdjustDoseFieldsIsHidden:YES];
     [self.segmentRoundingDirection setSelectedSegment:0];
     //single
     [self.textFieldSingleDosagedescription setStringValue:@""];
@@ -177,7 +189,7 @@
             
             if (calcType == kDoseCalculationBy_MgKg_Adjustable) {
                 [self.checkboxAllowAdjustment setState:NSOnState];
-                self.containerViewAdjustDosage.hidden = NO;
+                [self visibilityOfAdjustDoseFieldsIsHidden:NO];
                 [self.textFieldMaxDosage setIntegerValue:[[drug objectForKey:kKey_DosageMgKgMaximum] integerValue]];
                 [self.textFieldMinDosage setIntegerValue:[[drug objectForKey:kKey_DosageMgKgMinimum] integerValue]];
             }
@@ -273,7 +285,9 @@
             [self addNewThreshold];
             break;
         case 1:
+        {
             [self deleteSelectedThreshold];
+        }
             break;
     }
 }

@@ -44,7 +44,8 @@ NSTableViewDataSource, NSTableViewDelegate
 @property (weak) IBOutlet NSTextField *textFieldMaximumFinalDose;
 @property (weak) IBOutlet NSSegmentedControl *segmentRoundingDirection;
 @property (weak) IBOutlet NSButton *checkboxAllowAdjustment;
-@property (weak) IBOutlet NSView *containerViewAdjustDosage;
+@property (weak) IBOutlet NSTextField *textFieldLabelMinMgKg;
+@property (weak) IBOutlet NSTextField *textFieldLabelMaxMgKg;
 
 //single dose
 @property (weak) IBOutlet NSTextField *textFieldSingleDosagedescription;

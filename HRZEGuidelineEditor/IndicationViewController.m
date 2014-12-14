@@ -45,12 +45,14 @@
 -(void)alignDisplayWithIndication:(NSMutableDictionary *)indication
 {
     self.indicationInPlay = indication;
+    [self createDrugArrayIfNeeded];
     self.allowUpdatesFromView = NO;
     [self reloadTableViewSavingSelection:NO];
     [self.textFieldIndicationName setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationName]]];
     [self.textFieldDosingInstructions setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationDosingInstructions]]];
     [[self.textViewIndicationComments textStorage] setAttributedString:[HandyRoutines attributedStringFromDescriptionData:[indication objectForKey:kKey_IndicationComments]]];
     [self.checkBoxHideComments setState:[[indication objectForKey:kKey_Indication_HideComments] boolValue]];
+    [self displayDrugInfoForRow:0];
     self.allowUpdatesFromView = YES;
 }
 
@@ -73,9 +75,13 @@
 #pragma mark - NSTextFieldDelegate
 - (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor
 {
-    if ([control.identifier isEqualToString:@"textFieldIndicationName"] && (fieldEditor.string.length == 0))
+    if ([control.identifier isEqualToString:@"textFieldIndicationName"])
     {
+        if ((fieldEditor.string.length == 0))
+        {
             return NO;
+        }
+        [self.myGuidelineDisplayingViewController reloadTableViewSavingSelection:YES];
     }
     [self alignIndicationWithView];
     return YES;
@@ -101,11 +107,17 @@
 
 -(void)displayDrugInfoForRow:(NSInteger)row
 {
-    if (row<[(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] count])
+    if ([(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] count] >0 &&
+        row<[(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] count])
     {
         [self.embeddedDrugEditingViewController alignViewWithDrug:[(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] objectAtIndex:row]];
         self.embeddedDrugEditingViewController.view.hidden = NO;
         [self reloadTableViewSavingSelection:YES];
+    }
+    else
+    {
+        [self reloadTableViewSavingSelection:NO];
+        self.embeddedDrugEditingViewController.view.hidden = YES;
     }
 }
 
@@ -122,6 +134,70 @@
     
 }
 
+#pragma mark - Add/remove drugs
+
+- (IBAction)segmentAddRemoveDrugTapped:(NSSegmentedControl *)sender
+{
+    // NSInteger selSeg = sender.selectedSegment;
+    switch (sender.selectedSegment) {
+        case 0:
+            [self addNewDrug];
+            break;
+        case 1:
+        {
+            [self deleteSelectedDrug];
+        }
+            break;
+    }
+}
+
+
+
+-(void)createDrugArrayIfNeeded
+{
+    if ((NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] == nil)
+    {
+        [self.indicationInPlay setObject:[NSMutableArray array] forKey:kKey_ArrayOfDrugs];
+    }
+
+}
+
+-(void)addNewDrug
+{
+    NSMutableDictionary *drug = [HandyRoutines newEmptyDrugWithCalculationType:kDoseCalculationBy_MgKg_Adjustable];
+    [self createDrugArrayIfNeeded];
+    
+    [(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] addObject:drug];
+    [self reloadTableViewSavingSelection:NO];
+    [self.tableViewDrugs selectRowIndexes:[NSIndexSet indexSetWithIndex:[(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] count]-1] byExtendingSelection:NO];
+    [self displayDrugInfoForRow:[(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] count]-1];
+    [self saveGuideline];
+}
+
+-(void)deleteSelectedDrug
+{
+    NSInteger row = [self.tableViewDrugs selectedRow];
+    if (row >=0 && row<[(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] count])
+    {
+        NSString *nameOfDrug = [HandyRoutines stringFromStringTakingAccountOfNull:[[(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] objectAtIndex:row] objectForKey:kKey_DrugDisplayName]];
+
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setAlertStyle:NSCriticalAlertStyle];
+        [alert setMessageText:[NSString stringWithFormat:@"Are you sure you want to delete '%@'?\nThis cannot be undone.",nameOfDrug]];
+        [alert addButtonWithTitle:@"Delete"];
+        [alert addButtonWithTitle:@"Cancel"];
+        [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode) {
+            if (returnCode == NSAlertFirstButtonReturn)
+            {
+                self.embeddedDrugEditingViewController.view.hidden = YES;
+                [(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] removeObjectAtIndex:row];
+                [self reloadTableViewSavingSelection:NO];
+                [self saveGuideline];
+                [self displayDrugInfoForRow:0];
+            };
+        }];
+    }
+}
 
 #pragma mark - TableView DataSource & Delegate
 
@@ -137,10 +213,8 @@
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
-    NSInteger count=0;
-    if ((NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] != nil)
-        count=[(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] count];
-    return count;
+    [self createDrugArrayIfNeeded];
+    return [(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] count];
 }
 
 
@@ -151,8 +225,7 @@
     NSTableCellView *result = [tableView makeViewWithIdentifier:@"drugs" owner:self];
     
     // Set the stringValue of the cell's text field to the nameArray value at row
-    NSMutableDictionary *indicationDictAtRow = [(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] objectAtIndex:row];
-    result.textField.stringValue = [HandyRoutines stringFromStringTakingAccountOfNull:[indicationDictAtRow objectForKey:kKey_DrugDisplayName]];
+    result.textField.stringValue = [HandyRoutines stringFromStringTakingAccountOfNull:[[(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] objectAtIndex:row] objectForKey:kKey_DrugDisplayName]];
     
     // Return the result
     return result;

@@ -58,7 +58,7 @@
     self.allowUpdatesFromView = NO;
     [[self.textViewGuidelineDescription textStorage] setAttributedString:[HandyRoutines attributedStringFromDescriptionData:[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineDescription]]];
     [self reloadTableViewSavingSelection:YES];
-    [self displayFirstIndication];
+    [self displayIndicationInfoForRow:0];
     self.allowUpdatesFromView = YES;
 
 }
@@ -123,22 +123,27 @@
     NSInteger row = [self.tableViewIndications selectedRow];
     if (row >=0 && row<[(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications]count])
     {
-        self.embeddedIndicationEditViewController.view.hidden = YES;
-        [(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] removeObjectAtIndex:row];
-        [self reloadTableViewSavingSelection:NO];
-        [self saveGuideline];
-        [self displayFirstIndication];
+        NSString *nameOfIndication = [HandyRoutines stringFromStringTakingAccountOfNull: [[(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] objectAtIndex:row] objectForKey:kKey_IndicationName]];
+
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setAlertStyle:NSCriticalAlertStyle];
+        [alert setMessageText:[NSString stringWithFormat:@"Are you sure you want to delete '%@'?\nThis cannot be undone.",nameOfIndication]];
+        [alert addButtonWithTitle:@"Delete"];
+        [alert addButtonWithTitle:@"Cancel"];
+        [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode) {
+            if (returnCode == NSAlertFirstButtonReturn)
+            {
+                self.embeddedIndicationEditViewController.view.hidden = YES;
+                [(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] removeObjectAtIndex:row];
+                [self reloadTableViewSavingSelection:NO];
+                [self saveGuideline];
+                [self displayIndicationInfoForRow:0];
+            };
+        }];
+
     }
 }
 
--(void)displayFirstIndication
-{
-    if ([(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] count] > 0) {
-        [self.tableViewIndications selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
-        [self displayIndicationInfoForRow:0];
-    }
-
-}
 
 #pragma mark - TableView DataSource & Delegate
 
@@ -185,10 +190,16 @@
 
 -(void)displayIndicationInfoForRow:(NSInteger)row
 {
-    if (row<[(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] count]) {
+    if ([(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] count]>0 &&
+        row<[(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] count]) {
         [self.embeddedIndicationEditViewController alignDisplayWithIndication: [(NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications] objectAtIndex:row]];
         self.embeddedIndicationEditViewController.view.hidden = NO;
         [self reloadTableViewSavingSelection:YES];
+    }
+    else
+    {
+        [self reloadTableViewSavingSelection:NO];
+        self.embeddedIndicationEditViewController.view.hidden = YES;
     }
 }
 

@@ -40,6 +40,6 @@ NSBrowserDelegate
 -(void)alignDisplayWithIndication:(NSMutableDictionary *)indication;
 -(void)alignIndicationWithView;
 -(void)saveGuideline;
-
+-(void)reloadTableViewSavingSelection:(BOOL)saveSelection;
 
 @end
