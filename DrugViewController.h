@@ -60,6 +60,7 @@ NSTableViewDataSource, NSTableViewDelegate
 
 -(void)alignViewWithDrug:(NSMutableDictionary *)drug;
 -(void)alignDrugWithView;
+-(void)alignDrugWithViewAsSelectionIsChanging;
 -(void)saveGuideline;
 
 

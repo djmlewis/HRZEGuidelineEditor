@@ -25,6 +25,12 @@
     self.allowUpdatesFromView = YES;
 }
 
+-(void)saveGuideline
+{
+    [self.myIndicationEditViewController saveGuideline];
+}
+
+
 #pragma mark - NSTextFieldDelegate
 - (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor
 {
@@ -51,17 +57,11 @@
     [self alignDrugWithView];
 }
 
+#pragma mark - IBAction
 
 - (IBAction)settingsChanged:(id)sender {
     [self alignDrugWithView];
 }
-
--(void)saveGuideline
-{
-    [self.myIndicationEditViewController saveGuideline];
-}
-
-#pragma mark - Calculation Fields
 
 - (IBAction)checkBoxAllowDosageAdjustmentChanged:(NSButton *)sender
 {
@@ -73,6 +73,8 @@
     [self.tabViewCalculationType selectTabViewItemAtIndex:self.popupButtonCalculationType.indexOfSelectedItem];
     [self alignDrugWithView];
 }
+
+#pragma mark - Calculation Fields
 
 -(void)visibilityOfAdjustDoseFieldsIsHidden:(BOOL)hidden
 {
@@ -101,6 +103,11 @@
     
 }
 
+-(void)alignDrugWithViewAsSelectionIsChanging
+{
+    [self alignDrugWithView];
+}
+
 -(void)alignDrugWithView
 {
     if (self.allowUpdatesFromView)
@@ -109,7 +116,8 @@
 
         [self.drugInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDrugName.stringValue] forKey:kKey_DrugDisplayName];
         [self.drugInPlay setObject:[HandyRoutines dataForDescriptionAttributedString:self.textViewDrugDescription.attributedString]  forKey:kKey_DrugInfoDescription];
-        
+        [self.drugInPlay setObject:[NSNumber numberWithBool:self.checkboxShowDrugInList.state] forKey:kKey_DrugShowInList];
+
         NSInteger calc = [self.popupButtonCalculationType indexOfSelectedItem];
         switch (calc)
         {
@@ -143,13 +151,13 @@
             case 2:
             {
                 [self.drugInPlay setObject:[NSNumber numberWithInteger:kDoseCalculationBy_SingleDose] forKey:kKey_DoseCalculationType];
-                [self.drugInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldmgkgDoseage.stringValue] forKey:kKey_SingleDoseInstructions];
+                [self.drugInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldSingleDosagedescription.stringValue] forKey:kKey_SingleDoseInstructions];
                 
             }
                 break;
         }
         [self saveGuideline];
-        self.allowUpdatesFromView = NO;
+        self.allowUpdatesFromView = YES;
 
     }
     
@@ -170,6 +178,7 @@
     self.allowUpdatesFromView = NO;
     [self.textFieldDrugName setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [drug objectForKey:kKey_DrugDisplayName]]];
     [[self.textViewDrugDescription textStorage] setAttributedString:[HandyRoutines attributedStringFromDescriptionData:[drug objectForKey:kKey_DrugInfoDescription]]];
+    [self.checkboxShowDrugInList setState:[(NSNumber *)[drug objectForKey:kKey_DrugShowInList] boolValue]];
 
     [self zeroTheCalculationFields];
     
@@ -207,7 +216,7 @@
         {
             [self.tabViewCalculationType selectTabViewItemAtIndex:2];
             [self.popupButtonCalculationType selectItemAtIndex:2];
-            [self.textFieldmgkgDoseage setStringValue:[[drug objectForKey:kKey_SingleDoseInstructions] stringValue]];
+            [self.textFieldSingleDosagedescription setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull:[[drug objectForKey:kKey_SingleDoseInstructions] stringValue]]];
         }
             break;
     }

@@ -98,6 +98,7 @@
 - (IBAction)segmentAddRemoveIndicationTapped:(NSSegmentedControl *)sender
 {
    // NSInteger selSeg = sender.selectedSegment;
+    [self.embeddedIndicationEditViewController alignIndicationWithViewAsSelectionIsChanging];
     switch (sender.selectedSegment) {
         case 0:
             [self addNewIndicationWithName:@"Untitled"];

@@ -25,7 +25,6 @@
     [super viewDidLoad];
     // Do view setup here.
     self.allowUpdatesFromView = YES;
-
 }
 
 
@@ -41,6 +40,16 @@
     [self.myGuidelineDisplayingViewController saveGuideline];
 }
 
+- (IBAction)colourWellAction:(NSColorWell *)sender
+{
+    CGFloat h;
+    CGFloat s;
+    CGFloat b;
+    CGFloat a;
+
+    [sender.color getHue:&h saturation:&s brightness:&b alpha:&a];
+    self.colorWellIndicationColour.color = [NSColor colorWithCalibratedHue:h saturation:s brightness:0.65f alpha:1.0f];
+}
 
 -(void)alignDisplayWithIndication:(NSMutableDictionary *)indication
 {
@@ -55,6 +64,14 @@
     [self displayDrugInfoForRow:0];
     self.allowUpdatesFromView = YES;
 }
+
+-(void)alignIndicationWithViewAsSelectionIsChanging
+{
+    [self.embeddedDrugEditingViewController alignDrugWithViewAsSelectionIsChanging];
+    [self alignIndicationWithView];
+}
+
+
 
 -(void)alignIndicationWithView
 {
@@ -138,6 +155,7 @@
 
 - (IBAction)segmentAddRemoveDrugTapped:(NSSegmentedControl *)sender
 {
+    [self.embeddedDrugEditingViewController alignDrugWithViewAsSelectionIsChanging];
     // NSInteger selSeg = sender.selectedSegment;
     switch (sender.selectedSegment) {
         case 0:

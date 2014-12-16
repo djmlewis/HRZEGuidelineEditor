@@ -34,9 +34,11 @@ NSBrowserDelegate
 
 @property (weak) IBOutlet NSTextField *textFieldIndicationName;
 
+@property (weak) IBOutlet NSColorWell *colorWellIndicationColour;
 
 
 
+-(void)alignIndicationWithViewAsSelectionIsChanging;
 -(void)alignDisplayWithIndication:(NSMutableDictionary *)indication;
 -(void)alignIndicationWithView;
 -(void)saveGuideline;
