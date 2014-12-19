@@ -7,6 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
+
+
 
 @interface HandyRoutines : NSObject
 
@@ -38,5 +41,15 @@
 +(NSMutableDictionary *)newEmptyTablet;
 +(NSMutableDictionary *)newEmptyTabletsDictionary;
 +(NSMutableDictionary *)newEmptyDrugInfoWithName:(NSString *)infoName;
+
++(NSColor *)textColourForHue:(NSNumber *)hue;
++(NSColor *)colourFromHue:(NSNumber *)hue;
++(NSColor *)colourFromHueMadeFaint:(NSNumber *)hue;
++(NSColor *)colourFromHueMadeFaintBySaturationValue:(NSNumber *)hue withSaturation:(NSNumber *)sat;//madefaint by tag
++(NSColor *)reverseTextColourForHue:(NSNumber *)hue;
++(NSColor *)colourFromHueMadeDarker:(NSNumber *)hue;
++(CGFloat)brightnessForBlackTagHue;
+
+
 
 @end

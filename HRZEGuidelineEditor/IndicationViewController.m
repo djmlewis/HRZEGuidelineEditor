@@ -39,8 +39,24 @@
 {
     [self.myGuidelineDisplayingViewController saveGuideline];
 }
+- (IBAction)showColourPanel:(NSButton *)sender
+{
+    if ([[NSColorPanel sharedColorPanel] isVisible])
+    {
+        [[NSColorPanel sharedColorPanel] orderOut:self];
+    }
+    else
+    {
+        [[NSColorPanel sharedColorPanel] setShowsAlpha:NO];
+        [[NSColorPanel sharedColorPanel] setMode:NSCrayonModeColorPanel];
+        [[NSColorPanel sharedColorPanel] setTarget:self];
+        [[NSColorPanel sharedColorPanel] setAction:@selector(colourWellAction:)];
+        [[NSColorPanel sharedColorPanel] orderFront:self];
 
-- (IBAction)colourWellAction:(NSColorWell *)sender
+    }
+}
+
+- (void)colourWellAction:(NSColorPanel *)sender
 {
     CGFloat h;
     CGFloat s;
@@ -48,7 +64,8 @@
     CGFloat a;
 
     [sender.color getHue:&h saturation:&s brightness:&b alpha:&a];
-    self.colorWellIndicationColour.color = [NSColor colorWithCalibratedHue:h saturation:s brightness:0.65f alpha:1.0f];
+    self.textFieldIndicationName.backgroundColor = [HandyRoutines colourFromHue:[NSNumber numberWithFloat:h]];
+    //[self.textViewIndicationComments.backgroundColor]  = [NSColor colorWithCalibratedHue:h saturation:s brightness:kColourDefaultBrightness alpha:1.0f];
 }
 
 -(void)alignDisplayWithIndication:(NSMutableDictionary *)indication

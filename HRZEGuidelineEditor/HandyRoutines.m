@@ -274,4 +274,102 @@
     return @"";
 }
 
+
+
++(NSColor *)colourFromHueMadeFaint:(NSNumber *)hue;
+{
+    if (hue == nil) {
+        return [NSColor colorWithHue:0.00f saturation:0.0f brightness:0.95f alpha:1.0f];//grey
+    }
+    if ([hue integerValue] == kIndicationColourBlackTag) {
+        return [NSColor colorWithHue:0.00f saturation:0.0f brightness:0.95f alpha:1.0f];//grey
+    }
+    if ([hue integerValue] == kIndicationColourWhiteTag) {
+        return [NSColor whiteColor];
+    }
+    return [NSColor colorWithHue:[hue floatValue] saturation:kColourDefaultLightSaturation brightness:1.0f alpha:1.0f];
+    
+}
+
++(NSColor *)colourFromHue:(NSNumber *)hue
+{
+    if (hue == nil) {
+        return [NSColor blackColor];
+    }
+    if ([hue integerValue] == kIndicationColourBlackTag) {
+        return [NSColor blackColor];
+    }
+    if ([hue integerValue] == kIndicationColourWhiteTag) {
+        return [NSColor whiteColor];
+    }
+    return [NSColor colorWithHue:[hue floatValue] saturation:1.0f brightness:kColourDefaultBrightness alpha:1.0f];
+    
+}
+
++(NSColor *)colourFromHueMadeDarker:(NSNumber *)hue
+{
+    if (hue == nil) {
+        return [NSColor blackColor];
+    }
+    if ([hue integerValue] == kIndicationColourBlackTag) {
+        return [NSColor blackColor];
+    }
+    if ([hue integerValue] == kIndicationColourWhiteTag) {
+        return [NSColor whiteColor];
+    }
+    return [NSColor colorWithHue:[hue floatValue] saturation:1.0f brightness:kColourDefaultBrightnessDarker alpha:1.0f];
+    
+}
+
++(CGFloat)brightnessForBlackTagHue
+{
+    return 1.0f-kColourDefaultLightSaturation;
+}
+
++(NSColor *)colourFromHueMadeFaintBySaturationValue:(NSNumber *)hue withSaturation:(NSNumber *)sat
+{
+    if (sat == nil) {
+        sat = [NSNumber numberWithFloat:kColourDefaultLightSaturation];
+    }
+    if (hue == nil) {
+        return [NSColor colorWithHue:0.0f saturation:0.0f brightness:[self brightnessForBlackTagHue] alpha:1.0f];
+    }
+    if ([hue integerValue] == kIndicationColourBlackTag) {
+        return [NSColor colorWithHue:0.0f saturation:0.0f brightness:[self brightnessForBlackTagHue] alpha:1.0f];
+    }
+    if ([hue integerValue] == kIndicationColourWhiteTag) {
+        return [NSColor whiteColor];
+    }
+    
+    CGFloat satCorrected = [sat floatValue]/100.0f;
+    return [NSColor colorWithHue:[hue floatValue] saturation:satCorrected brightness:1.0f alpha:1.0f];
+    
+}
+
++(NSColor *)reverseTextColourForHue:(NSNumber *)hue//used inside colourboxes
+{
+    if (hue == nil) {
+        return [NSColor whiteColor];
+    }
+    if ([hue integerValue] == kIndicationColourWhiteTag) {
+        return [NSColor blackColor];
+    }
+    return [NSColor whiteColor];
+}
+
++(NSColor *)textColourForHue:(NSNumber *)hue//used in lists
+{
+    if (hue == nil) {
+        return [NSColor blackColor];
+    }
+    if ([hue floatValue] < 0.0f)
+    {
+        return [NSColor blackColor];
+    }
+    return [HandyRoutines colourFromHueMadeDarker:hue];
+}
+
+
+
+
 @end
