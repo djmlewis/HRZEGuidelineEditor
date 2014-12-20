@@ -26,16 +26,19 @@ NSBrowserDelegate
 @property (strong) DrugViewController *embeddedDrugEditingViewController;
 
 @property (strong) NSMutableDictionary *indicationInPlay;
-@property (unsafe_unretained) IBOutlet NSTextView *textViewIndicationComments;
 @property (weak) IBOutlet NSButton *checkBoxHideComments;
+@property (weak) IBOutlet NSButton *buttonColourText;
+@property (weak) IBOutlet NSButton *buttonColourPage;
+
+
+@property (unsafe_unretained) IBOutlet NSTextView *textViewIndicationComments;
 @property (weak) IBOutlet NSTextField *textFieldDosingInstructions;
 
 @property (weak) IBOutlet NSTableView *tableViewDrugs;
 
 @property (weak) IBOutlet NSTextField *textFieldIndicationName;
 
-@property (weak) IBOutlet NSColorWell *colorWellIndicationColour;
-
+@property NSInteger colourPanelInPlay;
 
 
 -(void)alignIndicationWithViewAsSelectionIsChanging;

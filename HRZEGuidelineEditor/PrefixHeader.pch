@@ -85,9 +85,11 @@
 #define kKey_GuidelineDescription @"kKey_GuidelineDescription"
 
 //the INDICATION
-#define kKey_IndicationColour @"kKey_IndicationColour"
+//#define kKey_IndicationColour @"kKey_IndicationColour"
+#define kKey_IndicationColour_Header @"kKey_IndicationColour_Header"
+#define kKey_IndicationColour_Page @"kKey_IndicationColour_Page"
 #define kKey_Indication_HideComments @"kKey_Indication_HideComments"
-#define kKey_IndicationPageColourSaturation @"kKey_IndicationPageColourSaturation"
+//#define kKey_IndicationPageColourSaturation @"kKey_IndicationPageColourSaturation"
 #define kKey_IndicationName @"kKey_IndicationName"
 #define kKey_IndicationComments @"kKey_IndicationComments"
 #define kKey_IndicationDosingInstructions @"kKey_IndicationDosingInstructions"

@@ -5,6 +5,7 @@
 //  Created by David Lewis on 03/12/2014.
 //  Copyright (c) 2014 eu.djml. All rights reserved.
 //
+#import <QuartzCore/QuartzCore.h>
 
 #import "IndicationViewController.h"
 #import "PrefixHeader.pch"
@@ -12,6 +13,8 @@
 #import "GuidelineViewController.h"
 #import "DrugViewController.h"   
 
+#define kColourPanel_Text 0
+#define kColourPanel_Page 1
 
 
 @interface IndicationViewController ()
@@ -32,41 +35,106 @@
 {
     [super viewWillAppear];
     self.view.wantsLayer = YES;
-    self.view.layer.backgroundColor = [NSColor lightGrayColor].CGColor;
+    //self.view.layer.backgroundColor = [NSColor lightGrayColor].CGColor;
 }
 
 -(void)saveGuideline
 {
     [self.myGuidelineDisplayingViewController saveGuideline];
 }
+
+#pragma mark - Colours
+
 - (IBAction)showColourPanel:(NSButton *)sender
 {
     if ([[NSColorPanel sharedColorPanel] isVisible])
     {
-        [[NSColorPanel sharedColorPanel] orderOut:self];
+        if (sender.state == NSOnState)
+        {
+            [self doShowColourPanelFromButton:sender];
+        }
+        else
+        {
+            [[NSColorPanel sharedColorPanel] setTarget:nil];
+            [[NSColorPanel sharedColorPanel] orderOut:self];
+            self.buttonColourPage.state = NSOffState;
+            self.buttonColourText.state = NSOffState;
+        }
     }
     else
     {
-        [[NSColorPanel sharedColorPanel] setShowsAlpha:NO];
-        [[NSColorPanel sharedColorPanel] setMode:NSCrayonModeColorPanel];
-        [[NSColorPanel sharedColorPanel] setTarget:self];
-        [[NSColorPanel sharedColorPanel] setAction:@selector(colourWellAction:)];
-        [[NSColorPanel sharedColorPanel] orderFront:self];
-
+        if (sender.state == NSOnState)
+        {
+            [self doShowColourPanelFromButton:sender];
+        }
+        else
+            
+        {
+            self.buttonColourPage.state = NSOffState;
+            self.buttonColourText.state = NSOffState;
+        }
     }
 }
 
-- (void)colourWellAction:(NSColorPanel *)sender
+-(void)alignColoursForIndication:(NSMutableDictionary *)indication
 {
-    CGFloat h;
-    CGFloat s;
-    CGFloat b;
-    CGFloat a;
+    NSColor *colour = [HandyRoutines colourFromString:[indication objectForKey:kKey_IndicationColour_Header]];
+    if (colour)
+    {
+        self.textFieldIndicationName.backgroundColor = colour;
+    }
+    else
+    {
+        self.textFieldIndicationName.backgroundColor = [NSColor blackColor];
+    }
+    colour = [HandyRoutines colourFromString:[indication objectForKey:kKey_IndicationColour_Page]];
+    if (CGColorEqualToColor(colour.CGColor, [[NSColor blackColor] CGColor]))
+    {
+        self.textViewIndicationComments.backgroundColor = [NSColor whiteColor];
+    }
+    else
+    {
+        self.textViewIndicationComments.backgroundColor = colour;
+    }
 
-    [sender.color getHue:&h saturation:&s brightness:&b alpha:&a];
-    self.textFieldIndicationName.backgroundColor = [HandyRoutines colourFromHue:[NSNumber numberWithFloat:h]];
-    //[self.textViewIndicationComments.backgroundColor]  = [NSColor colorWithCalibratedHue:h saturation:s brightness:kColourDefaultBrightness alpha:1.0f];
 }
+
+
+-(void)doShowColourPanelFromButton:(NSButton *)sender
+{
+    self.colourPanelInPlay = sender.tag;
+    [[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
+    [[NSColorPanel sharedColorPanel] setMode:NSCrayonModeColorPanel];
+    [[NSColorPanel sharedColorPanel] setTarget:self];
+    [[NSColorPanel sharedColorPanel] setAction:@selector(colourPanelChangedColour:)];
+    [[NSColorPanel sharedColorPanel] orderFront:self];
+    switch (self.colourPanelInPlay) {
+        case kColourPanel_Text:
+            self.buttonColourPage.state = NSOffState;
+            break;
+        case kColourPanel_Page:
+            self.buttonColourText.state = NSOffState;
+            break;
+    }
+
+}
+
+- (void)colourPanelChangedColour:(NSColorPanel *)sender
+{
+    switch (self.colourPanelInPlay)
+    {
+        case kColourPanel_Text:
+            self.textFieldIndicationName.backgroundColor = sender.color;//[HandyRoutines colourFromHue:[NSNumber numberWithFloat:h]];
+           break;
+        case kColourPanel_Page:
+            self.textViewIndicationComments.backgroundColor  = sender.color;//[HandyRoutines colourFromColourMadeFaint:sender.color];
+            break;
+    }
+    [self alignIndicationWithView];
+}
+
+#pragma mark - aligning
+
 
 -(void)alignDisplayWithIndication:(NSMutableDictionary *)indication
 {
@@ -77,10 +145,12 @@
     [self.textFieldIndicationName setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationName]]];
     [self.textFieldDosingInstructions setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationDosingInstructions]]];
     [[self.textViewIndicationComments textStorage] setAttributedString:[HandyRoutines attributedStringFromDescriptionData:[indication objectForKey:kKey_IndicationComments]]];
+    [self alignColoursForIndication:indication];
     [self.checkBoxHideComments setState:[[indication objectForKey:kKey_Indication_HideComments] boolValue]];
     [self displayDrugInfoForRow:0];
     self.allowUpdatesFromView = YES;
 }
+
 
 -(void)alignIndicationWithViewAsSelectionIsChanging
 {
@@ -98,6 +168,11 @@
         [self.indicationInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldIndicationName.stringValue] forKey:kKey_IndicationName];
         [self.indicationInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDosingInstructions.stringValue] forKey:kKey_IndicationDosingInstructions];
         [self.indicationInPlay setObject:[HandyRoutines dataForDescriptionAttributedString:self.textViewIndicationComments.attributedString] forKey:kKey_IndicationComments];
+        
+        [self.indicationInPlay setObject:[HandyRoutines stringFromNSColor:self.textViewIndicationComments.backgroundColor] forKey:kKey_IndicationColour_Page];
+        [self.indicationInPlay setObject:[HandyRoutines stringFromNSColor:self.textFieldIndicationName.backgroundColor] forKey:kKey_IndicationColour_Header];
+
+        
         [self.indicationInPlay setObject:[NSNumber numberWithBool:self.checkBoxHideComments.state] forKey:kKey_Indication_HideComments];
         
         [self saveGuideline];

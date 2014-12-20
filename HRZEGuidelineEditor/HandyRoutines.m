@@ -12,6 +12,8 @@
 
 @implementation HandyRoutines
 
+#pragma mark - Paths
+
 +(NSString *)pathToDocsDirectory
 {
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -26,6 +28,9 @@
 	NSString *dirpath = [paths objectAtIndex:0];
     return dirpath;
 }
+
+
+#pragma mark - New
 
 +(NSMutableDictionary *)newEmptyTabletsDictionary
 {
@@ -59,54 +64,6 @@
     return dict;
 }
 
-+(NSMutableDictionary *)newEmptyDrugInfoWithName:(NSString *)infoName
-{
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:infoName forKey:kKey_DrugInfoName];
-    [dict setObject:[HandyRoutines dataForDescriptionAttributedString:[[NSAttributedString alloc] initWithString:@" "]] forKey:kKey_DrugInfoDescription];
-    
-    return dict;
-}
-
-+(NSMutableDictionary *)dictionaryFromPropertyListData:(NSData *)data
-{
-    return (NSMutableDictionary *)[NSPropertyListSerialization propertyListWithData:data options:NSPropertyListMutableContainersAndLeaves format:NULL error:NULL];
-}
-
-+(NSData *)serializedDictionaryDataFromDictionary:(id)guideline
-{
-    NSError *error = nil;
-    NSData *serializedData = [NSPropertyListSerialization dataWithPropertyList:guideline format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
-    if (error == noErr) {
-        return serializedData;
-    }
-    return nil;
-}
-
-
-+(NSMutableArray *)arrayTakingAccountOfNullFromArray:(NSMutableArray *)arrayToCheck
-{
-    if (arrayToCheck == nil) {
-        return [NSMutableArray array];
-    }
-    return arrayToCheck;
-}
-
-+(NSMutableArray *)mutableArrayFromArrayOfIntegers:(NSArray *)array
-{
-    NSMutableArray *marray = [NSMutableArray arrayWithCapacity:array.count];
-    for (int i = 0; i<array.count; i++)
-    {
-        NSNumber *object = [array objectAtIndex:i];
-        [marray addObject:[NSNumber numberWithInteger:[object integerValue]]];
-    }
-    return marray;
-}
-
-+(NSMutableDictionary *)mutableDictionaryCopyFromDictionary:(NSMutableDictionary *)dictToCopy
-{
-    return  (NSMutableDictionary *)[NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:dictToCopy]];
-}
 
 +(NSMutableDictionary *)newEmptyIndicationWithName:(NSString *)indicationName
 {
@@ -114,8 +71,8 @@
     [indication setObject:indicationName forKey:kKey_IndicationName];
     [indication setObject:@"" forKey:kKey_IndicationComments];
     [indication setObject:[NSNumber numberWithBool:NO] forKey:kKey_Indication_HideComments];
-    [indication setObject:[NSNumber numberWithInteger:kIndicationColourWhiteTag] forKey:kKey_IndicationColour];
-    [indication setObject:[NSNumber numberWithInteger:kColourDefaultLightSaturationInteger] forKey:kKey_IndicationPageColourSaturation];
+    [indication setObject:[HandyRoutines stringFromNSColor:[NSColor blackColor]] forKey:kKey_IndicationColour_Header];
+    [indication setObject:[HandyRoutines stringFromNSColor:[NSColor whiteColor]] forKey:kKey_IndicationColour_Page];
     [indication setObject:[NSMutableArray array] forKey:kKey_ArrayOfDrugs];
     return indication;
 }
@@ -161,14 +118,69 @@
     [threshold setObject:[NSNumber numberWithInteger:4] forKey:kKey_Threshold_Booleans];
     [threshold setObject:@"" forKey:kKey_Threshold_doses];
     [threshold setObject:@"" forKey:kKey_Threshold_DoseForms];
-
+    
     return threshold;
+}
+
++(NSMutableDictionary *)newEmptyDrugInfoWithName:(NSString *)infoName
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:infoName forKey:kKey_DrugInfoName];
+    [dict setObject:[HandyRoutines dataForDescriptionAttributedString:[[NSAttributedString alloc] initWithString:@" "]] forKey:kKey_DrugInfoDescription];
+    
+    return dict;
+}
+
+#pragma mark - Serialisation
+
++(NSMutableDictionary *)dictionaryFromPropertyListData:(NSData *)data
+{
+    return (NSMutableDictionary *)[NSPropertyListSerialization propertyListWithData:data options:NSPropertyListMutableContainersAndLeaves format:NULL error:NULL];
+}
+
++(NSData *)serializedDictionaryDataFromDictionary:(id)guideline
+{
+    NSError *error = nil;
+    NSData *serializedData = [NSPropertyListSerialization dataWithPropertyList:guideline format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+    if (error == noErr) {
+        return serializedData;
+    }
+    return nil;
+}
+
+#pragma mark - Array Dict Swaps
+
++(NSMutableArray *)arrayTakingAccountOfNullFromArray:(NSMutableArray *)arrayToCheck
+{
+    if (arrayToCheck == nil) {
+        return [NSMutableArray array];
+    }
+    return arrayToCheck;
+}
+
++(NSMutableArray *)mutableArrayFromArrayOfIntegers:(NSArray *)array
+{
+    NSMutableArray *marray = [NSMutableArray arrayWithCapacity:array.count];
+    for (int i = 0; i<array.count; i++)
+    {
+        NSNumber *object = [array objectAtIndex:i];
+        [marray addObject:[NSNumber numberWithInteger:[object integerValue]]];
+    }
+    return marray;
+}
+
++(NSMutableDictionary *)mutableDictionaryCopyFromDictionary:(NSMutableDictionary *)dictToCopy
+{
+    return  (NSMutableDictionary *)[NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:dictToCopy]];
 }
 
 +(void)swapRowFromIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath inArray:(NSMutableArray *)arrayToSwap
 {
 
 }
+
+#pragma mark - Strings
+
 
 +(NSData *)dataForDescriptionAttributedString:(NSAttributedString *)attributedString
 {
@@ -205,6 +217,9 @@
     }
     return string;
 }
+
+#pragma mark - Rounding and Predicates
+
 
 +(NSNumberFormatter *)roundingFromRoundUpDownValue:(NSNumber *)updownKey andRoundingValue:(NSNumber *)roundVal
 {
@@ -274,9 +289,44 @@
     return @"";
 }
 
+#pragma mark - Colours
 
++(NSString *)stringFromNSColor:(NSColor*)colour
+{
+    CIColor * cic = [CIColor colorWithCGColor:colour.CGColor];
+    NSString *string = [NSString stringWithFormat:@"%@",[cic stringRepresentation]];
+    return string;
+}
 
-+(NSColor *)colourFromHueMadeFaint:(NSNumber *)hue;
++(NSColor *)colourFromString:(NSString*)string
+{
+    if (string == nil)
+    {
+        return [NSColor blackColor];
+    }
+    CIColor * cic = [CIColor colorWithString:string];
+    NSColor *colour =  [NSColor colorWithCIColor:cic];
+    if (colour != nil) {
+        return colour;
+    }
+    return [NSColor blackColor];
+}
+
++(NSColor *)colourFromColourMadeFaint:(NSColor *)colour
+{
+    CGFloat h;
+    CGFloat s;
+    CGFloat b;
+    CGFloat a;
+    [colour getHue:&h saturation:&s brightness:&b alpha:&a];
+    if (h==0 && s == 0)
+    {
+        return [NSColor colorWithHue:h saturation:s brightness:0.95f alpha:1.0f];
+    }
+    return [NSColor colorWithHue:h saturation:kColourDefaultLightSaturation brightness:1.0f alpha:1.0f];
+}
+
++(NSColor *)colourFromHueMadeFaint:(NSNumber *)hue
 {
     if (hue == nil) {
         return [NSColor colorWithHue:0.00f saturation:0.0f brightness:0.95f alpha:1.0f];//grey
@@ -291,6 +341,7 @@
     
 }
 
+
 +(NSColor *)colourFromHue:(NSNumber *)hue
 {
     if (hue == nil) {
@@ -303,7 +354,6 @@
         return [NSColor whiteColor];
     }
     return [NSColor colorWithHue:[hue floatValue] saturation:1.0f brightness:kColourDefaultBrightness alpha:1.0f];
-    
 }
 
 +(NSColor *)colourFromHueMadeDarker:(NSNumber *)hue

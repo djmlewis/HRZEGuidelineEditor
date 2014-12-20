@@ -42,8 +42,11 @@
 +(NSMutableDictionary *)newEmptyTabletsDictionary;
 +(NSMutableDictionary *)newEmptyDrugInfoWithName:(NSString *)infoName;
 
++(NSString *)stringFromNSColor:(NSColor*)colour;
++(NSColor *)colourFromString:(NSString*)string;
 +(NSColor *)textColourForHue:(NSNumber *)hue;
 +(NSColor *)colourFromHue:(NSNumber *)hue;
++(NSColor *)colourFromColourMadeFaint:(NSColor *)colour;
 +(NSColor *)colourFromHueMadeFaint:(NSNumber *)hue;
 +(NSColor *)colourFromHueMadeFaintBySaturationValue:(NSNumber *)hue withSaturation:(NSNumber *)sat;//madefaint by tag
 +(NSColor *)reverseTextColourForHue:(NSNumber *)hue;
