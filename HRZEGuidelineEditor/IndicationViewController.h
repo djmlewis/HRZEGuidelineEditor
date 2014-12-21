@@ -31,7 +31,7 @@ NSBrowserDelegate
 @property (weak) IBOutlet NSButton *buttonColourPage;
 
 
-@property (unsafe_unretained) IBOutlet NSTextView *textViewIndicationComments;
+@property (unsafe_unretained) IBOutlet NSTextField *textFieldIndicationComments;
 @property (weak) IBOutlet NSTextField *textFieldDosingInstructions;
 
 @property (weak) IBOutlet NSTableView *tableViewDrugs;

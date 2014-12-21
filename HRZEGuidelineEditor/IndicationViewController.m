@@ -35,7 +35,9 @@
 {
     [super viewWillAppear];
     self.view.wantsLayer = YES;
-    //self.view.layer.backgroundColor = [NSColor lightGrayColor].CGColor;
+    self.view.layer.backgroundColor = [[NSColor whiteColor] CGColor];
+    //[[NSColor colorWithCalibratedWhite:0.75f alpha:1.0f] CGColor];
+    //[[NSColor colorWithCalibratedRed:245.0f/255.0f green:1.0f blue:1.0f alpha:1.0f] CGColor];
 }
 
 -(void)saveGuideline
@@ -82,19 +84,23 @@
     if (colour)
     {
         self.textFieldIndicationName.backgroundColor = colour;
+        self.textFieldIndicationComments.textColor = colour;
+
     }
     else
     {
         self.textFieldIndicationName.backgroundColor = [NSColor blackColor];
+        self.textFieldIndicationComments.textColor = [NSColor blackColor];
+
     }
     colour = [HandyRoutines colourFromString:[indication objectForKey:kKey_IndicationColour_Page]];
     if (CGColorEqualToColor(colour.CGColor, [[NSColor blackColor] CGColor]))
     {
-        self.textViewIndicationComments.backgroundColor = [NSColor whiteColor];
+        self.textFieldIndicationComments.backgroundColor = [NSColor whiteColor];
     }
     else
     {
-        self.textViewIndicationComments.backgroundColor = colour;
+        self.textFieldIndicationComments.backgroundColor = colour;
     }
 
 }
@@ -124,10 +130,11 @@
     switch (self.colourPanelInPlay)
     {
         case kColourPanel_Text:
-            self.textFieldIndicationName.backgroundColor = sender.color;//[HandyRoutines colourFromHue:[NSNumber numberWithFloat:h]];
+            self.textFieldIndicationName.backgroundColor = sender.color;
+            self.textFieldIndicationComments.textColor = sender.color;
            break;
         case kColourPanel_Page:
-            self.textViewIndicationComments.backgroundColor  = sender.color;//[HandyRoutines colourFromColourMadeFaint:sender.color];
+            self.textFieldIndicationComments.backgroundColor  = sender.color;//[HandyRoutines colourFromColourMadeFaint:sender.color];
             break;
     }
     [self alignIndicationWithView];
@@ -144,7 +151,7 @@
     [self reloadTableViewSavingSelection:NO];
     [self.textFieldIndicationName setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationName]]];
     [self.textFieldDosingInstructions setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationDosingInstructions]]];
-    [[self.textViewIndicationComments textStorage] setAttributedString:[HandyRoutines attributedStringFromDescriptionData:[indication objectForKey:kKey_IndicationComments]]];
+    [self.textFieldIndicationComments setStringValue:[[HandyRoutines attributedStringFromDescriptionData:[indication objectForKey:kKey_IndicationComments]] string]];
     [self alignColoursForIndication:indication];
     [self.checkBoxHideComments setState:[[indication objectForKey:kKey_Indication_HideComments] boolValue]];
     [self displayDrugInfoForRow:0];
@@ -167,9 +174,9 @@
         self.allowUpdatesFromView = NO;
         [self.indicationInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldIndicationName.stringValue] forKey:kKey_IndicationName];
         [self.indicationInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDosingInstructions.stringValue] forKey:kKey_IndicationDosingInstructions];
-        [self.indicationInPlay setObject:[HandyRoutines dataForDescriptionAttributedString:self.textViewIndicationComments.attributedString] forKey:kKey_IndicationComments];
+        [self.indicationInPlay setObject:[HandyRoutines dataForDescriptionAttributedString:[[NSAttributedString alloc] initWithString: self.textFieldIndicationComments.stringValue]] forKey:kKey_IndicationComments];
         
-        [self.indicationInPlay setObject:[HandyRoutines stringFromNSColor:self.textViewIndicationComments.backgroundColor] forKey:kKey_IndicationColour_Page];
+        [self.indicationInPlay setObject:[HandyRoutines stringFromNSColor:self.textFieldIndicationComments.backgroundColor] forKey:kKey_IndicationColour_Page];
         [self.indicationInPlay setObject:[HandyRoutines stringFromNSColor:self.textFieldIndicationName.backgroundColor] forKey:kKey_IndicationColour_Header];
 
         

@@ -27,6 +27,7 @@ NSTableViewDataSource, NSTableViewDelegate
 
 
 
+@property (weak) IBOutlet NSView *frameView;
 
 @property (weak) IBOutlet NSTextField *textFieldDrugName;
 @property (unsafe_unretained) IBOutlet NSTextView *textViewDrugDescription;
