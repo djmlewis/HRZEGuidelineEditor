@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		630D8B601A2F9DA3006D7E88 /* IndicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630D8B5F1A2F9DA3006D7E88 /* IndicationViewController.m */; };
+		634A0E961A49CC40001DFE2B /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 634A0E951A49CC40001DFE2B /* Quartz.framework */; };
+		634A0E991A49CCD5001DFE2B /* PDFguidelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 634A0E981A49CCD5001DFE2B /* PDFguidelineViewController.m */; };
 		636011BB1A2E3222004B4BA2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 636011BA1A2E3222004B4BA2 /* AppDelegate.m */; };
 		636011BD1A2E3222004B4BA2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 636011BC1A2E3222004B4BA2 /* main.m */; };
 		636011C01A2E3222004B4BA2 /* GuidelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636011BF1A2E3222004B4BA2 /* GuidelineViewController.m */; };
@@ -34,6 +36,9 @@
 /* Begin PBXFileReference section */
 		630D8B5E1A2F9DA3006D7E88 /* IndicationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndicationViewController.h; sourceTree = "<group>"; };
 		630D8B5F1A2F9DA3006D7E88 /* IndicationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IndicationViewController.m; sourceTree = "<group>"; };
+		634A0E951A49CC40001DFE2B /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
+		634A0E971A49CCD5001DFE2B /* PDFguidelineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFguidelineViewController.h; sourceTree = "<group>"; };
+		634A0E981A49CCD5001DFE2B /* PDFguidelineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFguidelineViewController.m; sourceTree = "<group>"; };
 		636011B41A2E3222004B4BA2 /* HRZEGuidelineEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HRZEGuidelineEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		636011B81A2E3222004B4BA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		636011B91A2E3222004B4BA2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -63,6 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				634A0E961A49CC40001DFE2B /* Quartz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +85,7 @@
 		636011AB1A2E3222004B4BA2 = {
 			isa = PBXGroup;
 			children = (
+				634A0E951A49CC40001DFE2B /* Quartz.framework */,
 				636011B61A2E3222004B4BA2 /* HRZEGuidelineEditor */,
 				636011D01A2E3222004B4BA2 /* HRZEGuidelineEditorTests */,
 				636011B51A2E3222004B4BA2 /* Products */,
@@ -97,6 +104,8 @@
 		636011B61A2E3222004B4BA2 /* HRZEGuidelineEditor */ = {
 			isa = PBXGroup;
 			children = (
+				634A0E971A49CCD5001DFE2B /* PDFguidelineViewController.h */,
+				634A0E981A49CCD5001DFE2B /* PDFguidelineViewController.m */,
 				636011B91A2E3222004B4BA2 /* AppDelegate.h */,
 				636011BA1A2E3222004B4BA2 /* AppDelegate.m */,
 				63E40C391A30EF58009FB233 /* DrugViewController.h */,
@@ -256,6 +265,7 @@
 			files = (
 				636011C31A2E3222004B4BA2 /* GuidelineDocument.m in Sources */,
 				636011C01A2E3222004B4BA2 /* GuidelineViewController.m in Sources */,
+				634A0E991A49CCD5001DFE2B /* PDFguidelineViewController.m in Sources */,
 				63E40C3B1A30EF58009FB233 /* DrugViewController.m in Sources */,
 				636011BD1A2E3222004B4BA2 /* main.m in Sources */,
 				636011BB1A2E3222004B4BA2 /* AppDelegate.m in Sources */,

@@ -26,6 +26,7 @@ NSTableViewDataSource, NSTableViewDelegate
 @property (strong) GuidelineDocument *myGuidelineDocument;
 @property (strong) IndicationViewController *embeddedIndicationEditViewController;
 
+@property (weak) IBOutlet NSVisualEffectView *visualEffectsView;
 
 @property (unsafe_unretained) IBOutlet NSTextView *textViewGuidelineDescription;
 @property (weak) IBOutlet NSSegmentedControl *segmentAddRemoveIndication;
@@ -38,8 +39,8 @@ NSTableViewDataSource, NSTableViewDelegate
 
 
 
-
-
+-(NSMutableAttributedString *)createDescriptionFromGuideline;
+-(NSURL *)createPDFFile:(CGSize)pageSize;
 
 
 @end

@@ -34,10 +34,18 @@
 -(void)viewWillAppear
 {
     [super viewWillAppear];
+    self.myGuidelineDisplayingViewController.visualEffectsView.hidden = YES;
     self.view.wantsLayer = YES;
-    self.view.layer.backgroundColor = [[NSColor whiteColor] CGColor];
+    self.view.layer.backgroundColor = [[NSColor colorWithCalibratedWhite:0.72f alpha:1.0f] CGColor];
+    self.frameView.layer.backgroundColor = [[NSColor colorWithCalibratedWhite:0.98f alpha:1.0f] CGColor];
     //[[NSColor colorWithCalibratedWhite:0.75f alpha:1.0f] CGColor];
     //[[NSColor colorWithCalibratedRed:245.0f/255.0f green:1.0f blue:1.0f alpha:1.0f] CGColor];
+}
+
+-(void)viewWillDisappear
+{
+    [super viewWillDisappear];
+    self.myGuidelineDisplayingViewController.visualEffectsView.hidden = NO;
 }
 
 -(void)saveGuideline
@@ -117,9 +125,11 @@
     switch (self.colourPanelInPlay) {
         case kColourPanel_Text:
             self.buttonColourPage.state = NSOffState;
+            [[NSColorPanel sharedColorPanel] setColor:self.textFieldIndicationName.backgroundColor];
             break;
         case kColourPanel_Page:
             self.buttonColourText.state = NSOffState;
+            [[NSColorPanel sharedColorPanel] setColor:self.textFieldIndicationComments.backgroundColor];
             break;
     }
 

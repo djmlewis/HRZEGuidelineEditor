@@ -34,10 +34,17 @@
 {
     [super viewWillAppear];
     self.tabViewCalculationType.layer.backgroundColor = [[NSColor clearColor] CGColor];
-    self.view.layer.backgroundColor = [[NSColor blackColor] CGColor];//[[NSColor colorWithCalibratedWhite:0.85f alpha:1.0f] CGColor];
-    self.frameView.layer.backgroundColor = [[NSColor colorWithCalibratedWhite:0.90f alpha:1.0f] CGColor];
-    //[[NSColor colorWithCalibratedRed:1.0f green:1.0f blue:240.0f/255.0f alpha:1.0f] CGColor];
+    self.view.layer.backgroundColor = [[NSColor colorWithCalibratedWhite:0.72f alpha:1.0f] CGColor];
+    self.frameView.layer.backgroundColor = [[NSColor windowBackgroundColor] CGColor];
+    self.myIndicationEditViewController.visualEffectsView.hidden = YES;
 }
+
+-(void)viewWillDisappear
+{
+    [super viewWillDisappear];
+    self.myIndicationEditViewController.visualEffectsView.hidden = NO;
+}
+
 
 #pragma mark - NSTextFieldDelegate
 - (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor

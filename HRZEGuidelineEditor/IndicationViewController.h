@@ -25,6 +25,11 @@ NSBrowserDelegate
 @property (strong) GuidelineViewController *myGuidelineDisplayingViewController;
 @property (strong) DrugViewController *embeddedDrugEditingViewController;
 
+
+
+@property (weak) IBOutlet NSView *frameView;
+@property (weak) IBOutlet NSVisualEffectView *visualEffectsView;
+
 @property (strong) NSMutableDictionary *indicationInPlay;
 @property (weak) IBOutlet NSButton *checkBoxHideComments;
 @property (weak) IBOutlet NSButton *buttonColourText;
