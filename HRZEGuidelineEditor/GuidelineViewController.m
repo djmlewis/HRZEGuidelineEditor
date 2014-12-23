@@ -17,6 +17,8 @@
 #import "HandyRoutines.h"
 #import "IndicationViewController.h"
 #import "PDFguidelineViewController.h"
+#import "PDFGuidelineWindowController.h"
+
 
 #import <CoreText/CoreText.h>
 
@@ -223,14 +225,20 @@
         self.embeddedIndicationEditViewController.myGuidelineDisplayingViewController = self;
         self.embeddedIndicationEditViewController.view.hidden = YES;
     }
-    else if ([segue.identifier isEqualToString:@"showPDF"])
+    else if ([segue.identifier isEqualToString:@"showPDFwindow"])
     {
-       PDFguidelineViewController* thePDFguidelineViewController = (PDFguidelineViewController *)[segue destinationController];
-       thePDFguidelineViewController.callingGuidelineViewController = self;
+        PDFGuidelineWindowController* thePDFGuidelineWindowController = (PDFGuidelineWindowController *)[segue destinationController];
+        thePDFGuidelineWindowController.callingGuidelineViewController = self;
+        [thePDFGuidelineWindowController setPDFdocumentWithPDFData:[self createPDFData:CGSizeMake(842.0f,1190.0f)]];
+        [[thePDFGuidelineWindowController window] setTitle:[self.view.window.title stringByDeletingPathExtension]];
     }
+    /*else if ([segue.identifier isEqualToString:@"showPDF"])
+    {
+        PDFguidelineViewController* thePDFguidelineViewController = (PDFguidelineViewController *)[segue destinationController];
+        thePDFguidelineViewController.callingGuidelineViewController = self;
+    }*/
     
 }
-
 
 #pragma Mark - Strings
 -(CTFontRef)boldHeadlineFontWithSize:(CGFloat)size

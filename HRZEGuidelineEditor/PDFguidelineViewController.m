@@ -10,7 +10,7 @@
 #import "GuidelineViewController.h"
 #import <Quartz/Quartz.h>
 
-
+#import "PDFGuidelineWindowController.h"
 
 
 @interface PDFguidelineViewController ()
@@ -24,11 +24,24 @@
     // Do view setup here.
 }
 
+-(void)awakeFromNib
+{
+    [super awakeFromNib];
+    [(PDFGuidelineWindowController *)[[self.view window] windowController] setEmbeddedPDFguidelineViewController:self];
+}
+
+-(void)setPDFdocumentWithPDFData:(NSData *)pdfData
+{
+    //PDFGuidelineWindowController* myPDFGuidelineWindowController = (PDFGuidelineWindowController*)[[self.view window] windowController];
+    //self.pdfView.document = [[PDFDocument alloc] initWithData:[myPDFGuidelineWindowController.callingGuidelineViewController createPDFData:CGSizeMake(842.0f,1190.0f)]];
+    self.pdfView.document = [[PDFDocument alloc] initWithData:pdfData];
+
+}
+
 -(void)viewWillAppear
 {
     [super viewWillAppear];
-    //NSURL *url = [self.callingGuidelineViewController createPDFFile:CGSizeMake(842.0f,1190.0f)];
-    self.pdfView.document = [[PDFDocument alloc] initWithData:[self.callingGuidelineViewController createPDFData:CGSizeMake(842.0f,1190.0f)]];
+
 }
 
 @end
