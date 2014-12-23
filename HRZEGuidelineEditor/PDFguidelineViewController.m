@@ -27,8 +27,8 @@
 -(void)viewWillAppear
 {
     [super viewWillAppear];
-    NSURL *url = [self.callingGuidelineViewController createPDFFile:CGSizeMake(842.0f,1190.0f)];
-    self.pdfView.document = [[PDFDocument alloc] initWithURL:url];
+    //NSURL *url = [self.callingGuidelineViewController createPDFFile:CGSizeMake(842.0f,1190.0f)];
+    self.pdfView.document = [[PDFDocument alloc] initWithData:[self.callingGuidelineViewController createPDFData:CGSizeMake(842.0f,1190.0f)]];
 }
 
 @end

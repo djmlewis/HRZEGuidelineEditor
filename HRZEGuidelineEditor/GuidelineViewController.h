@@ -41,7 +41,7 @@ NSTableViewDataSource, NSTableViewDelegate
 
 -(NSMutableAttributedString *)createDescriptionFromGuideline;
 -(NSURL *)createPDFFile:(CGSize)pageSize;
-
+-(NSData *)createPDFData:(CGSize)pageSize;
 
 @end
 

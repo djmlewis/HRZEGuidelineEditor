@@ -663,18 +663,18 @@
                 <customObject id="DO4-vc-bZB" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <viewController id="5il-Jx-Uap" customClass="PDFguidelineViewController" sceneMemberID="viewController">
                     <view key="view" id="HpE-YQ-J3k">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <rect key="frame" x="0.0" y="0.0" width="868" height="1090"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <pdfView autoresizesSubviews="NO" wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IXE-2D-oJh">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                                <rect key="frame" x="0.0" y="0.0" width="868" height="1090"/>
                             </pdfView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="IXE-2D-oJh" firstAttribute="leading" secondItem="HpE-YQ-J3k" secondAttribute="leading" id="3eW-N4-Utw"/>
-                            <constraint firstItem="IXE-2D-oJh" firstAttribute="top" secondItem="HpE-YQ-J3k" secondAttribute="top" id="MHE-pq-4co"/>
-                            <constraint firstAttribute="trailing" secondItem="IXE-2D-oJh" secondAttribute="trailing" id="ggF-3T-sFL"/>
-                            <constraint firstAttribute="bottom" secondItem="IXE-2D-oJh" secondAttribute="bottom" id="jFV-XR-fni"/>
+                            <constraint firstAttribute="bottom" secondItem="IXE-2D-oJh" secondAttribute="bottom" id="1GR-aG-Arw"/>
+                            <constraint firstItem="IXE-2D-oJh" firstAttribute="leading" secondItem="HpE-YQ-J3k" secondAttribute="leading" id="E9U-nN-X5n"/>
+                            <constraint firstAttribute="trailing" secondItem="IXE-2D-oJh" secondAttribute="trailing" id="LV6-c8-gj3"/>
+                            <constraint firstItem="IXE-2D-oJh" firstAttribute="top" secondItem="HpE-YQ-J3k" secondAttribute="top" id="eqa-iz-bFV"/>
                         </constraints>
                     </view>
                     <connections>
@@ -682,7 +682,7 @@
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="945" y="488"/>
+            <point key="canvasLocation" x="1036" y="722"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
