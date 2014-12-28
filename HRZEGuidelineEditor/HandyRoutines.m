@@ -312,6 +312,16 @@
     return [NSColor blackColor];
 }
 
++(NSColor *)colourForHeaderInIndication:(NSMutableDictionary *)indication
+{
+    return [HandyRoutines colourFromString:[indication objectForKey:kKey_IndicationColour_Header]];
+}
+
++(NSColor *)colourForPageInIndication:(NSMutableDictionary *)indication
+{
+    return [HandyRoutines colourFromString:[indication objectForKey:kKey_IndicationColour_Page]];
+}
+
 +(NSColor *)colourFromColourMadeFaint:(NSColor *)colour
 {
     CGFloat h;

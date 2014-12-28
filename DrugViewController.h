@@ -47,6 +47,13 @@ NSTableViewDataSource, NSTableViewDelegate
 @property (weak) IBOutlet NSButton *checkboxAllowAdjustment;
 @property (weak) IBOutlet NSTextField *textFieldLabelMinMgKg;
 @property (weak) IBOutlet NSTextField *textFieldLabelMaxMgKg;
+@property (weak) IBOutlet NSTextField *textFieldDoseUnits;
+
+@property (weak) IBOutlet NSTextField *labelMinMgKg;
+@property (weak) IBOutlet NSTextField *labelMaxMgKg;
+@property (weak) IBOutlet NSTextField *labelRoundMg;
+@property (weak) IBOutlet NSTextField *labelMaxDoseMg;
+
 
 //single dose
 @property (weak) IBOutlet NSTextField *textFieldSingleDosagedescription;

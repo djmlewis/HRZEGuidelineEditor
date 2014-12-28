@@ -18,7 +18,7 @@
 #import "IndicationViewController.h"
 #import "PDFguidelineViewController.h"
 #import "PDFGuidelineWindowController.h"
-
+#import "GuideLineTextGenerator.h"
 
 #import <CoreText/CoreText.h>
 
@@ -101,7 +101,6 @@
 {
     [self alignGuidelineWithView];
 }
-
 
 #pragma mark - Add/remove indications
 
@@ -240,164 +239,22 @@
     
 }
 
-#pragma Mark - Strings
--(CTFontRef)boldHeadlineFontWithSize:(CGFloat)size
-{
-    NSDictionary *fontAttributes =
-    [NSDictionary dictionaryWithObjectsAndKeys: [NSFont boldSystemFontOfSize:size], NSFontAttributeName,nil];
-    // Create a descriptor.
-    CTFontDescriptorRef descriptor =
-    CTFontDescriptorCreateWithAttributes((CFDictionaryRef)fontAttributes);
-    
-    // Create a font using the descriptor.
-    CTFontRef font = CTFontCreateWithFontDescriptor(descriptor, 0.0, NULL);
-    CFRelease(descriptor);
-    return font;
-}
--(NSAttributedString *)astringForGuidelineName:(NSString *)name
-{
-    //[UIFont fontWithName:self.textViewInfo.font.fontName size:18.0f] [UIColor redColor],NSForegroundColorAttributeName,
-    CTFontRef font = [self boldHeadlineFontWithSize:16.0];
-    NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys: CFBridgingRelease(font), NSFontAttributeName,  nil];
-    NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
-    return astring;
-}
--(NSAttributedString *)astringForIndicationName:(NSString *)name
-{
-    NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:12.0f], NSFontAttributeName,nil];
-    NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
-    return astring;
-}
--(NSAttributedString *)astringForDrugName:(NSString *)name
-{
-    NSMutableParagraphStyle *ps = [[NSMutableParagraphStyle alloc] init];
-    [ps setHeadIndent:20.0f];
-    [ps setFirstLineHeadIndent:20.0f];
-    CTFontRef font = [self boldHeadlineFontWithSize:12.0];
-    NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys: CFBridgingRelease(font), NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
-    NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
-    return astring;
-}
--(NSAttributedString *)astringForPlainText:(NSString *)name
-{
-    NSMutableParagraphStyle *ps = [[NSMutableParagraphStyle alloc] init];
-    [ps setHeadIndent:40.0f];
-    [ps setFirstLineHeadIndent:40.0f];
-    NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:12.0f], NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
-    NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
-    return astring;
-}
-
--(NSAttributedString *)astringForPlainTextExtraIndent:(NSString *)name
-{
-    NSMutableParagraphStyle *ps = [[NSMutableParagraphStyle alloc] init];
-    [ps setHeadIndent:50.0f];
-    [ps setFirstLineHeadIndent:50.0f];
-    NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:12.0f], NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
-    NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
-    return astring;
-}
-
--(NSAttributedString *)astringForSmallPlainText:(NSString *)name
-{
-    NSMutableParagraphStyle *ps = [[NSMutableParagraphStyle alloc] init];
-    [ps setHeadIndent:40.0f];
-    [ps setFirstLineHeadIndent:40.0f];
-    NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:10.0f], NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
-    NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
-    return astring;
-}
-
--(NSMutableAttributedString *)createDescriptionFromGuideline
-{
-    NSMutableArray *arrayOfDescriptionLines = [NSMutableArray array];
-    if (self.view.window.title.length>0) [arrayOfDescriptionLines addObject:[self astringForGuidelineName:[NSString stringWithFormat:@"%@\n",self.view.window.title]]];//name
-    //pad the description
-    [arrayOfDescriptionLines addObject:[[NSAttributedString alloc] initWithString:@"\n"]];
-    [arrayOfDescriptionLines addObject:[HandyRoutines attributedStringFromDescriptionData:[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineDescription]]];//
-    [arrayOfDescriptionLines addObject:[[NSAttributedString alloc] initWithString:@"\n"]];
-    if (self.myGuidelineDocument.guideline != nil)
-    {
-        NSMutableArray *indications = (NSMutableArray *)[self.myGuidelineDocument.guideline objectForKey:kKey_GuidelineArrayOfIndications];
-        for (NSMutableDictionary *indication in indications)
-        {
-            if ([[indication objectForKey:kKey_IndicationName] length]>0) [arrayOfDescriptionLines addObject:[self astringForIndicationName:[NSString stringWithFormat:@"\n%@\n",[indication objectForKey:kKey_IndicationName]]]];
-            
-            if ([[indication objectForKey:kKey_IndicationDosingInstructions] length]>0) [arrayOfDescriptionLines addObject:[self astringForPlainText:[NSString stringWithFormat:@"%@\n",[indication objectForKey:kKey_IndicationDosingInstructions]]]];
-            
-            if ([[indication objectForKey:kKey_IndicationComments] length]>0) [arrayOfDescriptionLines addObject:[self astringForSmallPlainText:[NSString stringWithFormat:@"%@\n",[indication objectForKey:kKey_IndicationComments]]]];
-            
-            for (NSMutableDictionary *drug in [indication objectForKey:kKey_ArrayOfDrugs]) {
-                if ([[drug objectForKey:kKey_DrugDisplayName] length]>0) [arrayOfDescriptionLines addObject:[self astringForDrugName:[NSString stringWithFormat:@"\n%@\n",[drug objectForKey:kKey_DrugDisplayName]]]];
-                switch ([[drug objectForKey:kKey_DoseCalculationType] integerValue]) {
-                    case kDoseCalculationBy_MgKg:
-                        if ([[[drug objectForKey:kKey_DosageMgKg] stringValue] length]>0) [arrayOfDescriptionLines addObject:[self astringForPlainText:[NSString stringWithFormat:@"Dose @ %@ %@/Kg\nDoes not allow adjustment of dose factor.\n",[[drug objectForKey:kKey_DosageMgKg] stringValue],[drug objectForKey:kKey_DoseUnits]]]];
-                        if ([[drug objectForKey:kKey_MaxDose] integerValue]>0)
-                            [arrayOfDescriptionLines addObject:[self astringForPlainText:[NSString stringWithFormat:@"Maximum recommended dose: %@ %@\n",[[drug objectForKey:kKey_MaxDose] stringValue],[drug objectForKey:kKey_DoseUnits]]]];
-                        else
-                            [arrayOfDescriptionLines addObject:[self astringForPlainText:[NSString stringWithFormat:@"Maximum recommended dose not specified.\n"]]];
-                        
-                        if ([[[drug objectForKey:kKey_ValueOfRounding] stringValue] length]>0) [arrayOfDescriptionLines addObject:[self astringForPlainText:[NSString stringWithFormat:@"Round %@ to nearest %@ %@\n",[HandyRoutines roundingStringFromRoundUpDownValue:[drug objectForKey:kKey_RoundingUpDown]],[[drug objectForKey:kKey_ValueOfRounding] stringValue],[drug objectForKey:kKey_DoseUnits]]]];
-                        
-                        break;
-                    case kDoseCalculationBy_MgKg_Adjustable:
-                        if ([[[drug objectForKey:kKey_DosageMgKg] stringValue] length]>0) [arrayOfDescriptionLines addObject:[self astringForPlainText:[NSString stringWithFormat:@"Dose @ %@ mg/Kg\nAllows adjustment of dose factor within range:\n",[[drug objectForKey:kKey_DosageMgKg] stringValue]]]];
-                        if ([[[drug objectForKey:kKey_DosageMgKgMaximum] stringValue] length]>0) [arrayOfDescriptionLines addObject:[self astringForPlainTextExtraIndent:[NSString stringWithFormat:@"Maximum: %@ mg/Kg\n",[[drug objectForKey:kKey_DosageMgKgMaximum] stringValue]]]];
-                        if ([[[drug objectForKey:kKey_DosageMgKgMinimum] stringValue] length]>0) [arrayOfDescriptionLines addObject:[self astringForPlainTextExtraIndent:[NSString stringWithFormat:@"Minimum: %@ mg/Kg\n",[[drug objectForKey:kKey_DosageMgKgMinimum] stringValue]]]];
-                        if ([[drug objectForKey:kKey_MaxDose] integerValue]>0)
-                            [arrayOfDescriptionLines addObject:[self astringForPlainText:[NSString stringWithFormat:@"Maximum recommended dose is %@ mg\n",[[drug objectForKey:kKey_MaxDose] stringValue]]]];
-                        else
-                            [arrayOfDescriptionLines addObject:[self astringForPlainText:[NSString stringWithFormat:@"Maximum recommended dose not specified.\n"]]];
-                        
-                        if ([[[drug objectForKey:kKey_ValueOfRounding] stringValue] length]>0) [arrayOfDescriptionLines addObject:[self astringForPlainText:[NSString stringWithFormat:@"Round %@ to nearest %@ mg\n",[HandyRoutines roundingStringFromRoundUpDownValue:[drug objectForKey:kKey_RoundingUpDown]],[[drug objectForKey:kKey_ValueOfRounding] stringValue]]]];
-                        
-                        break;
-                    case kDoseCalculationBy_Threshold:
-                    {
-                        if ([[drug objectForKey:kKey_Threshold_MinWeight] integerValue]>1)
-                        {
-                            [arrayOfDescriptionLines addObject:[self astringForPlainText:[NSString stringWithFormat:@"Do not prescribe if body weight is < %@ Kg\n",[[drug objectForKey:kKey_Threshold_MinWeight] stringValue]]]];
-                        }
-                        else
-                        {
-                            [arrayOfDescriptionLines addObject:[self astringForPlainText:[NSString stringWithFormat:@"No minimum body weight restriction.\n"]]];
-                        }
-                        NSArray *thresholdsArray = (NSArray *)[drug objectForKey:kKey_Threshold_Array_Thresholds];
-                        for (int i = 0; i<[thresholdsArray count]; i++)
-                        {
-                            NSMutableDictionary *threshold = [thresholdsArray objectAtIndex:i];
-                            NSString *str = [NSString stringWithFormat:@"If body weight %@ %@ Kg: give %@ %@\n",
-                                             [HandyRoutines predecateStringForPredicate:[threshold objectForKey:kKey_Threshold_Booleans]],
-                                             [threshold objectForKey:kKey_Threshold_Weights],
-                                             [threshold objectForKey:kKey_Threshold_doses],
-                                             [threshold objectForKey:kKey_Threshold_DoseForms]];
-                            [arrayOfDescriptionLines addObject:[self astringForPlainText:str]];
-                        }
-                        
-                    }
-                        break;
-                    case kDoseCalculationBy_SingleDose:
-                        [arrayOfDescriptionLines addObject:[self astringForPlainText:[NSString stringWithFormat:@"%@\n",[drug objectForKey:kKey_SingleDoseInstructions]]]];
-                        break;
-                }
-            }
-        }
-    }
-    
-    NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
-    for (NSAttributedString *as in arrayOfDescriptionLines) {
-        [desc appendAttributedString:as];
-    }
-    return desc;
-}
 
 
 
 
 #pragma mark - PDF
+
+-(NSMutableAttributedString *)createDescriptionFromGuideline
+{
+    GuideLineTextGenerator *texter = [[GuideLineTextGenerator alloc] init];
+    return [texter textForGuideline:self.myGuidelineDocument.guideline withName:self.view.window.title];
+}
+
+
 -(NSURL *)createPDFFile:(CGSize)pageSize// 1
 {
-    NSAttributedString *astring = [self createDescriptionFromGuideline];
+    NSAttributedString *astring;// = [self createDescriptionFromGuideline];
     
     CGRect pageRect = CGRectMake(0, 0, pageSize.width, pageSize.height);
     NSURL *nurl = nil;
@@ -438,7 +295,7 @@
             CFRange currentRange = CFRangeMake(0, 0);
             NSInteger currentPage = 0;
             BOOL done = NO;
-            
+            astring = [self createDescriptionFromGuideline];
             do {
                 // Mark the beginning of a new page.
                 CGPDFContextBeginPage (pdfContext, pageDictionary);

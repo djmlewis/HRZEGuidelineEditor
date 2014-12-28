@@ -44,6 +44,11 @@
 
 +(NSString *)stringFromNSColor:(NSColor*)colour;
 +(NSColor *)colourFromString:(NSString*)string;
++(NSColor *)colourForHeaderInIndication:(NSMutableDictionary *)indication;
++(NSColor *)colourForPageInIndication:(NSMutableDictionary *)indication;
+
+
+
 +(NSColor *)textColourForHue:(NSNumber *)hue;
 +(NSColor *)colourFromHue:(NSNumber *)hue;
 +(NSColor *)colourFromColourMadeFaint:(NSColor *)colour;

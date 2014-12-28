@@ -57,7 +57,14 @@
         }
         [self.myIndicationEditViewController reloadTableViewSavingSelection:YES];
     }
+    
     [self alignDrugWithView];
+    
+    if ([control.identifier isEqualToString:@"textFieldDoseUnits"])
+    {
+        [self putDoseUnitsInLabels];
+    }
+
     return YES;
 }
 
@@ -114,8 +121,16 @@
     [self.textFieldSingleDosagedescription setStringValue:@""];
     //thresh
     [self.textFieldThresholdMinimumWeightAllowed setStringValue:@""];
-    
-    
+}
+
+-(void)putDoseUnitsInLabels
+{
+    NSString *doseUnits = [HandyRoutines stringFromStringTakingAccountOfNull: [self.drugInPlay objectForKey:kKey_DoseUnits]];
+    self.labelMaxMgKg.stringValue = [NSString stringWithFormat:@"Maximum %@/Kg",doseUnits];
+    self.labelMinMgKg.stringValue = [NSString stringWithFormat:@"Minimum %@/Kg",doseUnits];
+    self.labelMaxDoseMg.stringValue = [NSString stringWithFormat:@"%@",doseUnits];
+    self.labelRoundMg.stringValue = [NSString stringWithFormat:@"%@",doseUnits];
+    [[self.popupButtonCalculationType itemAtIndex:0] setTitle:[NSString stringWithFormat:@"%@/Kg",doseUnits]];
 }
 
 -(void)alignDrugWithViewAsSelectionIsChanging
@@ -130,6 +145,7 @@
         self.allowUpdatesFromView = NO;
 
         [self.drugInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDrugName.stringValue] forKey:kKey_DrugDisplayName];
+        [self.drugInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDoseUnits.stringValue] forKey:kKey_DoseUnits];
         [self.drugInPlay setObject:[HandyRoutines dataForDescriptionAttributedString:self.textViewDrugDescription.attributedString]  forKey:kKey_DrugInfoDescription];
         [self.drugInPlay setObject:[NSNumber numberWithBool:self.checkboxShowDrugInList.state] forKey:kKey_DrugShowInList];
 
@@ -192,9 +208,10 @@
     [self addArrayForThresholdsIfNeeded];
     self.allowUpdatesFromView = NO;
     [self.textFieldDrugName setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [drug objectForKey:kKey_DrugDisplayName]]];
+    [self.textFieldDoseUnits setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [drug objectForKey:kKey_DoseUnits]]];
     [[self.textViewDrugDescription textStorage] setAttributedString:[HandyRoutines attributedStringFromDescriptionData:[drug objectForKey:kKey_DrugInfoDescription]]];
     [self.checkboxShowDrugInList setState:[(NSNumber *)[drug objectForKey:kKey_DrugShowInList] boolValue]];
-
+    [self putDoseUnitsInLabels];
     [self zeroTheCalculationFields];
     
     NSInteger calcType = [[self.drugInPlay objectForKey:kKey_DoseCalculationType] integerValue];

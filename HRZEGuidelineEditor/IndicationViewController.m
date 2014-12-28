@@ -161,7 +161,7 @@
     [self reloadTableViewSavingSelection:NO];
     [self.textFieldIndicationName setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationName]]];
     [self.textFieldDosingInstructions setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationDosingInstructions]]];
-    [self.textFieldIndicationComments setStringValue:[[HandyRoutines attributedStringFromDescriptionData:[indication objectForKey:kKey_IndicationComments]] string]];
+    [self.textFieldIndicationComments setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationComments]]];
     [self alignColoursForIndication:indication];
     [self.checkBoxHideComments setState:[[indication objectForKey:kKey_Indication_HideComments] boolValue]];
     [self displayDrugInfoForRow:0];
@@ -184,7 +184,7 @@
         self.allowUpdatesFromView = NO;
         [self.indicationInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldIndicationName.stringValue] forKey:kKey_IndicationName];
         [self.indicationInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDosingInstructions.stringValue] forKey:kKey_IndicationDosingInstructions];
-        [self.indicationInPlay setObject:[HandyRoutines dataForDescriptionAttributedString:[[NSAttributedString alloc] initWithString: self.textFieldIndicationComments.stringValue]] forKey:kKey_IndicationComments];
+        [self.indicationInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldIndicationComments.stringValue] forKey:kKey_IndicationComments];
         
         [self.indicationInPlay setObject:[HandyRoutines stringFromNSColor:self.textFieldIndicationComments.backgroundColor] forKey:kKey_IndicationColour_Page];
         [self.indicationInPlay setObject:[HandyRoutines stringFromNSColor:self.textFieldIndicationName.backgroundColor] forKey:kKey_IndicationColour_Header];
