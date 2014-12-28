@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		630D8B601A2F9DA3006D7E88 /* IndicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630D8B5F1A2F9DA3006D7E88 /* IndicationViewController.m */; };
-		632A8A431A504E8D00868287 /* GuideLineTextGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 632A8A421A504E8D00868287 /* GuideLineTextGenerator.m */; };
+		632A8A431A504E8D00868287 /* GuideLinePDFGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 632A8A421A504E8D00868287 /* GuideLinePDFGenerator.m */; };
 		634A0E961A49CC40001DFE2B /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 634A0E951A49CC40001DFE2B /* Quartz.framework */; };
 		634A0E991A49CCD5001DFE2B /* PDFguidelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 634A0E981A49CCD5001DFE2B /* PDFguidelineViewController.m */; };
 		634A0E9C1A4A0AA7001DFE2B /* PDFGuidelineWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 634A0E9B1A4A0AA7001DFE2B /* PDFGuidelineWindowController.m */; };
@@ -38,8 +38,8 @@
 /* Begin PBXFileReference section */
 		630D8B5E1A2F9DA3006D7E88 /* IndicationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndicationViewController.h; sourceTree = "<group>"; };
 		630D8B5F1A2F9DA3006D7E88 /* IndicationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IndicationViewController.m; sourceTree = "<group>"; };
-		632A8A411A504E8D00868287 /* GuideLineTextGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuideLineTextGenerator.h; sourceTree = "<group>"; };
-		632A8A421A504E8D00868287 /* GuideLineTextGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GuideLineTextGenerator.m; sourceTree = "<group>"; };
+		632A8A411A504E8D00868287 /* GuideLinePDFGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuideLinePDFGenerator.h; sourceTree = "<group>"; };
+		632A8A421A504E8D00868287 /* GuideLinePDFGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GuideLinePDFGenerator.m; sourceTree = "<group>"; };
 		634A0E951A49CC40001DFE2B /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		634A0E971A49CCD5001DFE2B /* PDFguidelineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFguidelineViewController.h; sourceTree = "<group>"; };
 		634A0E981A49CCD5001DFE2B /* PDFguidelineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFguidelineViewController.m; sourceTree = "<group>"; };
@@ -110,26 +110,26 @@
 		636011B61A2E3222004B4BA2 /* HRZEGuidelineEditor */ = {
 			isa = PBXGroup;
 			children = (
-				634A0E971A49CCD5001DFE2B /* PDFguidelineViewController.h */,
-				634A0E981A49CCD5001DFE2B /* PDFguidelineViewController.m */,
 				636011B91A2E3222004B4BA2 /* AppDelegate.h */,
 				636011BA1A2E3222004B4BA2 /* AppDelegate.m */,
 				63E40C391A30EF58009FB233 /* DrugViewController.h */,
 				63E40C3A1A30EF58009FB233 /* DrugViewController.m */,
-				636011BE1A2E3222004B4BA2 /* GuidelineViewController.h */,
-				636011BF1A2E3222004B4BA2 /* GuidelineViewController.m */,
 				636011C11A2E3222004B4BA2 /* GuidelineDocument.h */,
 				636011C21A2E3222004B4BA2 /* GuidelineDocument.m */,
+				632A8A411A504E8D00868287 /* GuideLinePDFGenerator.h */,
+				632A8A421A504E8D00868287 /* GuideLinePDFGenerator.m */,
+				636011BE1A2E3222004B4BA2 /* GuidelineViewController.h */,
+				636011BF1A2E3222004B4BA2 /* GuidelineViewController.m */,
 				636011DE1A2E3253004B4BA2 /* HandyRoutines.h */,
 				636011DD1A2E3253004B4BA2 /* HandyRoutines.m */,
 				636011C41A2E3222004B4BA2 /* Images.xcassets */,
 				630D8B5E1A2F9DA3006D7E88 /* IndicationViewController.h */,
 				630D8B5F1A2F9DA3006D7E88 /* IndicationViewController.m */,
 				636011C61A2E3222004B4BA2 /* Main.storyboard */,
+				634A0E971A49CCD5001DFE2B /* PDFguidelineViewController.h */,
+				634A0E981A49CCD5001DFE2B /* PDFguidelineViewController.m */,
 				634A0E9A1A4A0AA7001DFE2B /* PDFGuidelineWindowController.h */,
 				634A0E9B1A4A0AA7001DFE2B /* PDFGuidelineWindowController.m */,
-				632A8A411A504E8D00868287 /* GuideLineTextGenerator.h */,
-				632A8A421A504E8D00868287 /* GuideLineTextGenerator.m */,
 				636011DF1A2E3253004B4BA2 /* PrefixHeader.pch */,
 				636011B71A2E3222004B4BA2 /* Supporting Files */,
 				637817891A33A31800C82FBE /* ThresholdTableCellView.h */,
@@ -280,7 +280,7 @@
 				636011BD1A2E3222004B4BA2 /* main.m in Sources */,
 				636011BB1A2E3222004B4BA2 /* AppDelegate.m in Sources */,
 				630D8B601A2F9DA3006D7E88 /* IndicationViewController.m in Sources */,
-				632A8A431A504E8D00868287 /* GuideLineTextGenerator.m in Sources */,
+				632A8A431A504E8D00868287 /* GuideLinePDFGenerator.m in Sources */,
 				6378178B1A33A31800C82FBE /* ThresholdTableCellView.m in Sources */,
 				636011E01A2E3253004B4BA2 /* HandyRoutines.m in Sources */,
 				634A0E9C1A4A0AA7001DFE2B /* PDFGuidelineWindowController.m in Sources */,

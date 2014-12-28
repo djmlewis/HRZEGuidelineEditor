@@ -8,14 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-@interface GuideLineTextGenerator : NSObject
+@interface GuideLinePDFGenerator : NSObject
 
 @property (strong) NSMutableDictionary *guideline;
 @property (strong) NSString *guidelineName;
 
 
+-(id)initWithGuideline:(NSMutableDictionary *)guideline withName:(NSString *)guidelineName;
 
+-(NSURL *)createPDFFile:(CGSize)pageSize;
+-(NSData *)createPDFData:(CGSize)pageSize;
 
--(NSMutableAttributedString *)textForGuideline:(NSMutableDictionary *)guideline withName:(NSString *)guidelineName;
 
 @end

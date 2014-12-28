@@ -658,49 +658,49 @@
             <point key="canvasLocation" x="927.5" y="-389"/>
         </scene>
         <!--Window Controller-->
-        <scene sceneID="X5o-nT-7WX">
+        <scene sceneID="EZm-Fg-WQq">
             <objects>
-                <windowController id="J7P-Iv-eFS" customClass="PDFGuidelineWindowController" sceneMemberID="viewController">
-                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="ehi-d3-ahD">
+                <windowController id="gYv-l9-uPI" customClass="PDFGuidelineWindowController" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="hf0-WB-KHU">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="425" y="526" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1577"/>
                     </window>
                     <connections>
-                        <segue destination="JKP-qb-1QS" kind="relationship" relationship="window.shadowedContentViewController" id="y5h-sg-LFb"/>
+                        <segue destination="cUw-SR-YQn" kind="relationship" relationship="window.shadowedContentViewController" id="y5h-AZ-zS0"/>
                     </connections>
                 </windowController>
-                <customObject id="h8l-Es-aiK" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <customObject id="paN-MZ-egS" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1005" y="-60"/>
+            <point key="canvasLocation" x="1165" y="-102"/>
         </scene>
         <!--Fguideline View Controller-->
-        <scene sceneID="ZOO-AG-QP0">
+        <scene sceneID="Vp1-gU-bi5">
             <objects>
-                <viewController id="JKP-qb-1QS" customClass="PDFguidelineViewController" sceneMemberID="viewController">
-                    <view key="view" id="XKC-5l-9Ha">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                <viewController id="cUw-SR-YQn" customClass="PDFguidelineViewController" sceneMemberID="viewController">
+                    <view key="view" id="0FO-NN-EUK">
+                        <rect key="frame" x="0.0" y="0.0" width="842" height="1190"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <pdfView autoresizesSubviews="NO" wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J9f-95-nDg">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                            <pdfView autoresizesSubviews="NO" wantsLayer="YES" scaleFactor="1.3338709677419356" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bP1-zx-90N">
+                                <rect key="frame" x="0.0" y="0.0" width="842" height="1190"/>
                             </pdfView>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="J9f-95-nDg" secondAttribute="bottom" id="Ljm-EG-Fms"/>
-                            <constraint firstItem="J9f-95-nDg" firstAttribute="top" secondItem="XKC-5l-9Ha" secondAttribute="top" id="bRJ-dP-Cm4"/>
-                            <constraint firstAttribute="trailing" secondItem="J9f-95-nDg" secondAttribute="trailing" id="kfh-dJ-a23"/>
-                            <constraint firstItem="J9f-95-nDg" firstAttribute="leading" secondItem="XKC-5l-9Ha" secondAttribute="leading" id="m51-s6-hgI"/>
+                            <constraint firstItem="bP1-zx-90N" firstAttribute="leading" secondItem="0FO-NN-EUK" secondAttribute="leading" id="R4v-er-9KO"/>
+                            <constraint firstItem="bP1-zx-90N" firstAttribute="top" secondItem="0FO-NN-EUK" secondAttribute="top" id="Ubw-pd-IYT"/>
+                            <constraint firstAttribute="bottom" secondItem="bP1-zx-90N" secondAttribute="bottom" id="Uc3-7t-SHM"/>
+                            <constraint firstAttribute="trailing" secondItem="bP1-zx-90N" secondAttribute="trailing" id="y25-gI-doD"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="pdfView" destination="J9f-95-nDg" id="0av-Db-C6r"/>
+                        <outlet property="pdfView" destination="bP1-zx-90N" id="h0o-nC-haC"/>
                     </connections>
                 </viewController>
-                <customObject id="Nx0-fZ-EX1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <customObject id="Ifv-GI-8XE" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1005" y="362"/>
+            <point key="canvasLocation" x="1104" y="754"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -876,7 +876,7 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <segue destination="J7P-Iv-eFS" kind="show" identifier="showPDFwindow" id="J7N-9h-k88"/>
+                                    <segue destination="gYv-l9-uPI" kind="show" identifier="showPDFwindow" id="w9y-El-LzU"/>
                                 </connections>
                             </button>
                         </subviews>
