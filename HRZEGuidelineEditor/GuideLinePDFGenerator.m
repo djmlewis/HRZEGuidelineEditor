@@ -278,82 +278,11 @@
 
 #pragma mark - PDF
 
--(NSURL *)createPDFFile:(CGSize)pageSize// 1
+-(void)createPDFAtURL:(NSURL *)url withSize:(CGSize)pageSize// 1
 {
-    NSAttributedString *astring;// = [self createDescriptionFromGuideline];
-    
-    CGRect pageRect = CGRectMake(0, 0, pageSize.width, pageSize.height);
-    NSURL *nurl = nil;
-    NSError *ferror = nil;
-    NSString *path = [[HandyRoutines pathToDocsDirectory] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ description.pdf",self.guidelineName]];
-    if ([[NSFileManager defaultManager]fileExistsAtPath:path])
-    {
-        [[NSFileManager defaultManager]removeItemAtPath:path error:&ferror];
-    }
-    nurl = [NSURL fileURLWithPath:path];
-    
-    CGContextRef pdfContext;
-    //CFStringRef path;
-    CFURLRef url = (__bridge CFURLRef)(nurl);
-    CFDataRef boxData = NULL;
-    CFMutableDictionaryRef myDictionary = NULL;
-    CFMutableDictionaryRef pageDictionary = NULL;
-    
-    
-    myDictionary = CFDictionaryCreateMutable(NULL, 0,
-                                             &kCFTypeDictionaryKeyCallBacks,
-                                             &kCFTypeDictionaryValueCallBacks); // 4
-    CFDictionarySetValue(myDictionary, kCGPDFContextTitle, CFSTR("Guideline PDF File"));
-    CFDictionarySetValue(myDictionary, kCGPDFContextCreator, CFSTR("HRZE Editor"));
-    pdfContext = CGPDFContextCreateWithURL (url, &pageRect, myDictionary); // 5
-    CFRelease(myDictionary);
-    pageDictionary = CFDictionaryCreateMutable(NULL, 0,
-                                               &kCFTypeDictionaryKeyCallBacks,
-                                               &kCFTypeDictionaryValueCallBacks); // 6
-    boxData = CFDataCreate(NULL,(const UInt8 *)&pageRect, sizeof (CGRect));
-    CFDictionarySetValue(pageDictionary, kCGPDFContextMediaBox, boxData);
-    
-    if (astring.length>0)
-    {
-        CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)(astring));
-        if (framesetter)
-        {
-            CFRange currentRange = CFRangeMake(0, 0);
-            NSInteger currentPage = 0;
-            BOOL done = NO;
-            astring = [self createDescriptionFromGuideline];
-            do {
-                // Mark the beginning of a new page.
-                CGPDFContextBeginPage (pdfContext, pageDictionary);
-                
-                // Draw a page number at the bottom of each page.
-                currentPage++;
-                [self drawPageNumber:currentPage pageSize:pageSize];
-                
-                // Render the current page and update the current range to
-                // point to the beginning of the next page.
-                currentRange = [self renderPage:currentPage withTextRange:currentRange andFramesetter:framesetter pageSize:pageSize pdfContext:pdfContext];
-                
-                // If we're at the end of the text, exit the loop.
-                if (currentRange.location == CFAttributedStringGetLength((CFAttributedStringRef)astring))
-                    done = YES;
-                CGPDFContextEndPage (pdfContext);
-                
-            } while (!done);
-            
-            
-            // Release the framewetter.
-            CFRelease(framesetter);
-            
-        } else {
-            NSLog(@"Could not create the framesetter needed to lay out the atrributed string.");
-        }
-    }
-    CGContextRelease (pdfContext);// 10
-    CFRelease(pageDictionary); // 11
-    CFRelease(boxData);
-    
-    return nurl;
+    NSData *data = [self createPDFData:pageSize];
+    NSError *error = nil;
+    [data writeToURL:url options:NSDataWritingAtomic error:&error];
 }
 
 -(NSData *)createPDFData:(CGSize)pageSize// 1

@@ -37,11 +37,14 @@
        [self.myGuidelineDocument.guideline setObject:[NSMutableArray array] forKey:kKey_GuidelineArrayOfIndications] ;
     }
     [self alignViewWithGuideline];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showGuidelinePDF) name:kNotification_ShowGuidelinePDF object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveGuidelinePDF) name:kNotification_SaveGuidelinePDF object:nil];
 }
 
 -(void)viewWillDisappear
 {
     [super viewWillDisappear];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
@@ -246,6 +249,32 @@
     GuideLinePDFGenerator *texter = [[GuideLinePDFGenerator alloc] initWithGuideline:self.myGuidelineDocument.guideline withName:self.view.window.title];
     return [texter createPDFData:pageSize];
 }
+
+-(void)saveGuidelinePDF
+{
+    if ([self.view.window isMainWindow]) {
+        NSSavePanel *panel = [NSSavePanel savePanel];
+        NSArray* fileTypes = [[NSArray alloc] initWithObjects:@"pdf", @"PDF", nil];
+        [panel setAllowedFileTypes:fileTypes];
+        [panel setNameFieldStringValue:[self.view.window.title stringByDeletingPathExtension]];
+        [panel beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
+            if (result == NSFileHandlingPanelOKButton) {
+                NSURL *destination = panel.URL;
+                GuideLinePDFGenerator *texter = [[GuideLinePDFGenerator alloc] initWithGuideline:self.myGuidelineDocument.guideline withName:self.view.window.title];
+                CGSize size = CGSizeMake(842.0f,1190.0f);
+                [texter createPDFAtURL:destination withSize:size];
+            }
+        }];
+    }
+}
+
+-(void)showGuidelinePDF
+{
+    if ([self.view.window isMainWindow]) {
+        [self performSegueWithIdentifier:@"showPDFwindow" sender:self];
+    }
+}
+
 
 
 

@@ -628,8 +628,17 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Guideline" id="bfq-s5-rmp">
                                     <items>
-                                        <menuItem title="Show guideline…" id="LEZ-S7-92y">
+                                        <menuItem title="Show Guideline PDF…" id="LEZ-S7-92y">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="showGuidelinePDF:" target="Voe-Tx-rLC" id="pRT-02-Ank"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Save Guideline PDF…" id="rEm-dk-yFU">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="saveGuidelinePDF:" target="Voe-Tx-rLC" id="4SG-Ps-E9h"/>
+                                            </connections>
                                         </menuItem>
                                     </items>
                                 </menu>
@@ -673,7 +682,7 @@
                 </windowController>
                 <customObject id="paN-MZ-egS" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1165" y="-102"/>
+            <point key="canvasLocation" x="961" y="-103"/>
         </scene>
         <!--Fguideline View Controller-->
         <scene sceneID="Vp1-gU-bi5">
@@ -683,7 +692,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="842" height="1190"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <pdfView autoresizesSubviews="NO" wantsLayer="YES" scaleFactor="1.3338709677419356" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bP1-zx-90N">
+                            <pdfView autoresizesSubviews="NO" wantsLayer="YES" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bP1-zx-90N">
                                 <rect key="frame" x="0.0" y="0.0" width="842" height="1190"/>
                             </pdfView>
                         </subviews>
@@ -700,7 +709,7 @@
                 </viewController>
                 <customObject id="Ifv-GI-8XE" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1104" y="754"/>
+            <point key="canvasLocation" x="1165" y="747"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -866,19 +875,6 @@
                                     <action selector="segmentAddRemoveIndicationTapped:" target="5gI-5U-AMq" id="m0S-Wv-Q9f"/>
                                 </connections>
                             </segmentedControl>
-                            <button translatesAutoresizingMaskIntoConstraints="NO" id="3vr-1U-pGi">
-                                <rect key="frame" x="1024" y="734" width="29" height="29"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="29" id="fYY-lk-0Hv"/>
-                                </constraints>
-                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSShareTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="WMg-jk-Yqo">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <segue destination="gYv-l9-uPI" kind="show" identifier="showPDFwindow" id="w9y-El-LzU"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstItem="tzT-sd-qXe" firstAttribute="trailing" secondItem="sqh-Mh-de5" secondAttribute="trailing" id="19e-dL-VcA"/>
@@ -891,7 +887,6 @@
                             <constraint firstItem="tzT-sd-qXe" firstAttribute="top" secondItem="sqh-Mh-de5" secondAttribute="top" id="QG3-8Z-jKU"/>
                             <constraint firstAttribute="trailing" secondItem="DoO-OT-TCP" secondAttribute="trailing" constant="20" symbolic="YES" id="QHT-Ec-Knm"/>
                             <constraint firstItem="PhY-kT-qQx" firstAttribute="baseline" secondItem="TPE-zs-fSe" secondAttribute="baseline" constant="-2" id="R6L-Di-5CM"/>
-                            <constraint firstItem="NaM-qJ-99R" firstAttribute="top" secondItem="3vr-1U-pGi" secondAttribute="bottom" constant="8" id="SHd-bG-Jm4"/>
                             <constraint firstItem="PhY-kT-qQx" firstAttribute="leading" secondItem="NaM-qJ-99R" secondAttribute="leading" id="W4d-AF-NSP"/>
                             <constraint firstItem="NaM-qJ-99R" firstAttribute="top" secondItem="hD5-Hg-xYX" secondAttribute="top" id="X1b-6J-72c"/>
                             <constraint firstAttribute="bottom" secondItem="sqh-Mh-de5" secondAttribute="bottom" constant="20" symbolic="YES" id="X3U-6r-Wv1"/>
@@ -899,11 +894,9 @@
                             <constraint firstItem="DoO-OT-TCP" firstAttribute="centerY" secondItem="TPE-zs-fSe" secondAttribute="centerY" constant="-2" id="YbR-o4-Ush"/>
                             <constraint firstItem="PhY-kT-qQx" firstAttribute="leading" secondItem="ERx-hH-rdd" secondAttribute="leading" constant="20" symbolic="YES" id="af2-eH-3oP"/>
                             <constraint firstItem="hD5-Hg-xYX" firstAttribute="trailing" secondItem="DoO-OT-TCP" secondAttribute="trailing" id="fRg-dN-lHp"/>
-                            <constraint firstItem="3vr-1U-pGi" firstAttribute="centerY" secondItem="DoO-OT-TCP" secondAttribute="centerY" constant="-8" id="jTH-hO-S3V"/>
                             <constraint firstItem="DoO-OT-TCP" firstAttribute="top" secondItem="ERx-hH-rdd" secondAttribute="top" constant="17" id="nGG-qN-E6W"/>
                             <constraint firstItem="tzT-sd-qXe" firstAttribute="leading" secondItem="sqh-Mh-de5" secondAttribute="leading" id="o3J-dP-SoQ"/>
                             <constraint firstItem="tzT-sd-qXe" firstAttribute="bottom" secondItem="sqh-Mh-de5" secondAttribute="bottom" id="oqh-JR-CdH"/>
-                            <constraint firstItem="TPE-zs-fSe" firstAttribute="leading" secondItem="3vr-1U-pGi" secondAttribute="trailing" constant="8" symbolic="YES" id="qgX-rO-HZA"/>
                             <constraint firstItem="hD5-Hg-xYX" firstAttribute="leading" secondItem="NaM-qJ-99R" secondAttribute="trailing" constant="8" symbolic="YES" id="rS9-Zc-pjm"/>
                             <constraint firstItem="hD5-Hg-xYX" firstAttribute="top" secondItem="DoO-OT-TCP" secondAttribute="bottom" constant="4" id="tEg-dI-IJx"/>
                         </constraints>
@@ -913,6 +906,7 @@
                         <outlet property="tableViewIndications" destination="pnC-gh-N5b" id="FnE-w2-6B7"/>
                         <outlet property="textViewGuidelineDescription" destination="Dyb-59-MFK" id="RQV-fR-dVr"/>
                         <outlet property="visualEffectsView" destination="tzT-sd-qXe" id="vvY-KO-WOB"/>
+                        <segue destination="gYv-l9-uPI" kind="show" identifier="showPDFwindow" id="hrI-YM-o0J"/>
                     </connections>
                 </viewController>
             </objects>
@@ -1088,7 +1082,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="214" id="gDN-X2-FRr"/>
                                 </constraints>
-                                <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="8Ma-ai-gF0">
+                                <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="border" drawsBackground="YES" id="8Ma-ai-gF0">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1826,6 +1820,5 @@
     </scenes>
     <resources>
         <image name="NSColorPanel" width="32" height="32"/>
-        <image name="NSShareTemplate" width="11" height="16"/>
     </resources>
 </document>

@@ -69,6 +69,14 @@
 #define  kNotification_OpenGuidelineAttachment @"kNotification_OpenGuidelineAttachment"
 #define  kNotification_OpenTabletAttachment @"kNotification_OpenTabletAttachment"
 #define  kNotification_ReloadDrugsDisplay @"kNotification_ReloadDrugsDisplay"
+#define  kNotification_ShowGuidelinePDF @"kNotification_ShowGuidelinePDF"
+#define  kNotification_SaveGuidelinePDF @"kNotification_SaveGuidelinePDF"
+
+
+
+
+
+
 
 //tablets
 #define kKey_TabletsDB_TBAppIdentifier @"kKey_TabletsDB_TBAppIdentifier"

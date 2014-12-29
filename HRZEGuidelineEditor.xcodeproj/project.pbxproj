@@ -130,7 +130,6 @@
 				634A0E981A49CCD5001DFE2B /* PDFguidelineViewController.m */,
 				634A0E9A1A4A0AA7001DFE2B /* PDFGuidelineWindowController.h */,
 				634A0E9B1A4A0AA7001DFE2B /* PDFGuidelineWindowController.m */,
-				636011DF1A2E3253004B4BA2 /* PrefixHeader.pch */,
 				636011B71A2E3222004B4BA2 /* Supporting Files */,
 				637817891A33A31800C82FBE /* ThresholdTableCellView.h */,
 				6378178A1A33A31800C82FBE /* ThresholdTableCellView.m */,
@@ -142,6 +141,7 @@
 		636011B71A2E3222004B4BA2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				636011DF1A2E3253004B4BA2 /* PrefixHeader.pch */,
 				636011B81A2E3222004B4BA2 /* Info.plist */,
 				636011BC1A2E3222004B4BA2 /* main.m */,
 			);

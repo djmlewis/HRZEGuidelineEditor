@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "PrefixHeader.pch"
+
 
 @interface AppDelegate ()
 
@@ -25,6 +27,15 @@
 -(BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender
 {
     return YES;
+}
+
+- (IBAction)showGuidelinePDF:(NSMenuItem *)sender
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:kNotification_ShowGuidelinePDF object:self];
+}
+- (IBAction)saveGuidelinePDF:(NSMenuItem *)sender {
+    [[NSNotificationCenter defaultCenter] postNotificationName:kNotification_SaveGuidelinePDF object:self];
+
 }
 
 @end
