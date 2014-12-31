@@ -40,7 +40,6 @@
 +(NSMutableDictionary *)newEmptyThreshold;
 +(NSMutableDictionary *)newEmptyTablet;
 +(NSMutableDictionary *)newEmptyTabletsDictionary;
-+(NSMutableDictionary *)newEmptyDrugInfoWithName:(NSString *)infoName;
 
 +(NSString *)stringFromNSColor:(NSColor*)colour;
 +(NSColor *)colourFromString:(NSString*)string;

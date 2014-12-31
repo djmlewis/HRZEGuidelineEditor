@@ -35,9 +35,9 @@
 {
     [super viewWillAppear];
     self.myGuidelineDisplayingViewController.visualEffectsView.hidden = YES;
-    self.view.wantsLayer = YES;
-    self.view.layer.backgroundColor = [[NSColor colorWithCalibratedWhite:0.72f alpha:1.0f] CGColor];
-    self.frameView.layer.backgroundColor = [[NSColor colorWithCalibratedWhite:0.98f alpha:1.0f] CGColor];
+    //self.view.wantsLayer = YES;
+    //self.view.layer.backgroundColor = [[NSColor colorWithCalibratedWhite:0.72f alpha:1.0f] CGColor];
+    //self.frameView.layer.backgroundColor = [[NSColor colorWithCalibratedWhite:0.98f alpha:1.0f] CGColor];
     //[[NSColor colorWithCalibratedWhite:0.75f alpha:1.0f] CGColor];
     //[[NSColor colorWithCalibratedRed:245.0f/255.0f green:1.0f blue:1.0f alpha:1.0f] CGColor];
 }
@@ -53,8 +53,8 @@
     [self.myGuidelineDisplayingViewController saveGuideline];
 }
 
-#pragma mark - Colours
 
+#pragma mark - Colours
 - (IBAction)showColourPanel:(NSButton *)sender
 {
     if ([[NSColorPanel sharedColorPanel] isVisible])
@@ -92,23 +92,23 @@
     if (colour)
     {
         self.textFieldIndicationName.backgroundColor = colour;
-        self.textFieldIndicationComments.textColor = colour;
+        self.textViewIndicationComments.textColor = colour;
 
     }
     else
     {
         self.textFieldIndicationName.backgroundColor = [NSColor blackColor];
-        self.textFieldIndicationComments.textColor = [NSColor blackColor];
+        self.textViewIndicationComments.textColor = [NSColor blackColor];
 
     }
     colour = [HandyRoutines colourFromString:[indication objectForKey:kKey_IndicationColour_Page]];
     if (CGColorEqualToColor(colour.CGColor, [[NSColor blackColor] CGColor]))
     {
-        self.textFieldIndicationComments.backgroundColor = [NSColor whiteColor];
+        self.textViewIndicationComments.backgroundColor = [NSColor whiteColor];
     }
     else
     {
-        self.textFieldIndicationComments.backgroundColor = colour;
+        self.textViewIndicationComments.backgroundColor = colour;
     }
 
 }
@@ -129,7 +129,7 @@
             break;
         case kColourPanel_Page:
             self.buttonColourText.state = NSOffState;
-            [[NSColorPanel sharedColorPanel] setColor:self.textFieldIndicationComments.backgroundColor];
+            [[NSColorPanel sharedColorPanel] setColor:self.textViewIndicationComments.backgroundColor];
             break;
     }
 
@@ -141,27 +141,32 @@
     {
         case kColourPanel_Text:
             self.textFieldIndicationName.backgroundColor = sender.color;
-            self.textFieldIndicationComments.textColor = sender.color;
+            self.textViewIndicationComments.textColor = sender.color;
            break;
         case kColourPanel_Page:
-            self.textFieldIndicationComments.backgroundColor  = sender.color;//[HandyRoutines colourFromColourMadeFaint:sender.color];
+            self.textViewIndicationComments.backgroundColor  = sender.color;//[HandyRoutines colourFromColourMadeFaint:sender.color];
             break;
     }
     [self alignIndicationWithView];
 }
 
+#pragma mark - IBActions
+
+- (IBAction)checkboxInitiallyHideIndicationCommentsChanged:(NSButton *)sender {
+    [self alignIndicationWithView];
+}
+
+
 #pragma mark - aligning
-
-
 -(void)alignDisplayWithIndication:(NSMutableDictionary *)indication
 {
     self.indicationInPlay = indication;
     [self createDrugArrayIfNeeded];
     self.allowUpdatesFromView = NO;
-    [self reloadTableViewSavingSelection:NO];
+    [self reloadDrugsTableViewSavingSelection:NO];
     [self.textFieldIndicationName setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationName]]];
     [self.textFieldDosingInstructions setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationDosingInstructions]]];
-    [self.textFieldIndicationComments setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationComments]]];
+    [self.textViewIndicationComments setString:[HandyRoutines stringFromStringTakingAccountOfNull: [indication objectForKey:kKey_IndicationComments]]];
     [self alignColoursForIndication:indication];
     [self.checkBoxHideComments setState:[[indication objectForKey:kKey_Indication_HideComments] boolValue]];
     [self displayDrugInfoForRow:0];
@@ -184,9 +189,9 @@
         self.allowUpdatesFromView = NO;
         [self.indicationInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldIndicationName.stringValue] forKey:kKey_IndicationName];
         [self.indicationInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDosingInstructions.stringValue] forKey:kKey_IndicationDosingInstructions];
-        [self.indicationInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldIndicationComments.stringValue] forKey:kKey_IndicationComments];
+        [self.indicationInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textViewIndicationComments.string] forKey:kKey_IndicationComments];
         
-        [self.indicationInPlay setObject:[HandyRoutines stringFromNSColor:self.textFieldIndicationComments.backgroundColor] forKey:kKey_IndicationColour_Page];
+        [self.indicationInPlay setObject:[HandyRoutines stringFromNSColor:self.textViewIndicationComments.backgroundColor] forKey:kKey_IndicationColour_Page];
         [self.indicationInPlay setObject:[HandyRoutines stringFromNSColor:self.textFieldIndicationName.backgroundColor] forKey:kKey_IndicationColour_Header];
 
         
@@ -238,11 +243,11 @@
     {
         [self.embeddedDrugEditingViewController alignViewWithDrug:[(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] objectAtIndex:row]];
         self.embeddedDrugEditingViewController.view.hidden = NO;
-        [self reloadTableViewSavingSelection:YES];
+        [self reloadDrugsTableViewSavingSelection:YES];
     }
     else
     {
-        [self reloadTableViewSavingSelection:NO];
+        [self reloadDrugsTableViewSavingSelection:NO];
         self.embeddedDrugEditingViewController.view.hidden = YES;
     }
 }
@@ -295,7 +300,7 @@
     [self createDrugArrayIfNeeded];
     
     [(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] addObject:drug];
-    [self reloadTableViewSavingSelection:NO];
+    [self reloadDrugsTableViewSavingSelection:NO];
     [self.tableViewDrugs selectRowIndexes:[NSIndexSet indexSetWithIndex:[(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] count]-1] byExtendingSelection:NO];
     [self displayDrugInfoForRow:[(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] count]-1];
     [self saveGuideline];
@@ -318,7 +323,7 @@
             {
                 self.embeddedDrugEditingViewController.view.hidden = YES;
                 [(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] removeObjectAtIndex:row];
-                [self reloadTableViewSavingSelection:NO];
+                [self reloadDrugsTableViewSavingSelection:NO];
                 [self saveGuideline];
                 [self displayDrugInfoForRow:0];
             };
@@ -328,7 +333,7 @@
 
 #pragma mark - TableView DataSource & Delegate
 
--(void)reloadTableViewSavingSelection:(BOOL)saveSelection
+-(void)reloadDrugsTableViewSavingSelection:(BOOL)saveSelection
 {
     NSInteger row = [self.tableViewDrugs selectedRow];
     [self.tableViewDrugs reloadData];
@@ -352,8 +357,15 @@
     NSTableCellView *result = [tableView makeViewWithIdentifier:@"drugs" owner:self];
     
     // Set the stringValue of the cell's text field to the nameArray value at row
-    result.textField.stringValue = [HandyRoutines stringFromStringTakingAccountOfNull:[[(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] objectAtIndex:row] objectForKey:kKey_DrugDisplayName]];
-    
+    NSMutableDictionary *drug = [(NSMutableArray *)[self.indicationInPlay objectForKey:kKey_ArrayOfDrugs] objectAtIndex:row];
+    result.textField.stringValue = [HandyRoutines stringFromStringTakingAccountOfNull:[drug objectForKey:kKey_DrugDisplayName]];
+    if ([[drug objectForKey:kKey_DrugShowInList] boolValue]==YES) {
+        result.textField.textColor = [NSColor blackColor];
+    }
+    else
+    {
+        result.textField.textColor = [NSColor darkGrayColor];
+    }
     // Return the result
     return result;
 }

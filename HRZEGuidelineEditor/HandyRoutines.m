@@ -122,14 +122,6 @@
     return threshold;
 }
 
-+(NSMutableDictionary *)newEmptyDrugInfoWithName:(NSString *)infoName
-{
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:infoName forKey:kKey_DrugInfoName];
-    [dict setObject:[HandyRoutines dataForDescriptionAttributedString:[[NSAttributedString alloc] initWithString:@" "]] forKey:kKey_DrugInfoDescription];
-    
-    return dict;
-}
 
 #pragma mark - Serialisation
 

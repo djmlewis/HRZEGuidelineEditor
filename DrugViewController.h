@@ -19,6 +19,7 @@ NSTableViewDataSource, NSTableViewDelegate
 
 @property (strong) IndicationViewController *myIndicationEditViewController;
 @property (strong) NSMutableDictionary *drugInPlay;
+@property BOOL allowUpdatesFromView;
 
 //@property (strong) NSMutableArray *arrayThresholdBooleans;
 //@property (strong) NSMutableArray *arrayThresholdWeights;
@@ -30,12 +31,11 @@ NSTableViewDataSource, NSTableViewDelegate
 @property (weak) IBOutlet NSView *frameView;
 
 @property (weak) IBOutlet NSTextField *textFieldDrugName;
-@property (unsafe_unretained) IBOutlet NSTextView *textViewDrugDescription;
 @property (weak) IBOutlet NSButton *checkboxShowDrugInList;
 @property (weak) IBOutlet NSTabView *tabViewCalculationType;
 @property (weak) IBOutlet NSPopUpButton *popupButtonCalculationType;
+@property (unsafe_unretained) IBOutlet NSTextView *textViewDrugInfo;
 
-@property BOOL allowUpdatesFromView;
 
 //mg/Kg
 @property (weak) IBOutlet NSTextField *textFieldmgkgDoseage;

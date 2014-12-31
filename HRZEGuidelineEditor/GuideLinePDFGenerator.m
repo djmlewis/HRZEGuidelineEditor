@@ -35,9 +35,7 @@
 #pragma Mark - Generic
 -(NSAttributedString *)astringForPlainText:(NSString *)name
 {
-    NSMutableParagraphStyle *ps = [[NSMutableParagraphStyle alloc] init];
-    [ps setHeadIndent:40.0f];
-    [ps setFirstLineHeadIndent:40.0f];
+    NSMutableParagraphStyle *ps = [self paragraphStyleForLevel:2];
     NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:12.0f], NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
     NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
     return astring;
@@ -45,9 +43,7 @@
 
 -(NSAttributedString *)astringForPlainTextExtraIndent:(NSString *)name
 {
-    NSMutableParagraphStyle *ps = [[NSMutableParagraphStyle alloc] init];
-    [ps setHeadIndent:50.0f];
-    [ps setFirstLineHeadIndent:50.0f];
+    NSMutableParagraphStyle *ps = [self paragraphStyleForLevel:3];
     NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:12.0f], NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
     NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
     return astring;
@@ -55,12 +51,37 @@
 
 -(NSAttributedString *)astringForSmallPlainText:(NSString *)name
 {
-    NSMutableParagraphStyle *ps = [[NSMutableParagraphStyle alloc] init];
-    [ps setHeadIndent:40.0f];
-    [ps setFirstLineHeadIndent:40.0f];
+    NSMutableParagraphStyle *ps = [self paragraphStyleForLevel:2];
     NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:10.0f], NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
     NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
     return astring;
+}
+
+-(CGFloat)indentForLevel:(NSInteger)level
+{
+    switch (level) {
+        case 0:
+            return 0.0f;
+            break;
+        case 1:
+            return 20.0f;
+            break;
+        case 2:
+            return 40.0f;
+            break;
+        case 3:
+            return 50.0f;
+            break;
+    }
+    return 0.0f;
+}
+
+-(NSMutableParagraphStyle *)paragraphStyleForLevel:(NSInteger)level
+{
+    NSMutableParagraphStyle *ps = [[NSMutableParagraphStyle alloc] init];
+    [ps setHeadIndent:[self indentForLevel:level]];
+    [ps setFirstLineHeadIndent:[self indentForLevel:level]];
+    return ps;
 }
 
 
@@ -107,13 +128,21 @@
 {
     if ([[indication objectForKey:kKey_IndicationName] length]>0)
     {
-        NSString *name = [NSString stringWithFormat:@"\n%@\n",[HandyRoutines stringFromStringTakingAccountOfNull:[indication objectForKey:kKey_IndicationName]]];
         NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 [NSFont boldSystemFontOfSize:14.0f], NSFontAttributeName,
-                                 [[HandyRoutines colourForHeaderInIndication:indication]CGColor], kCTForegroundColorAttributeName,
-                                 nil];
+                                         [NSFont boldSystemFontOfSize:14.0f], NSFontAttributeName,
+                                         [[HandyRoutines colourForHeaderInIndication:indication]CGColor], kCTForegroundColorAttributeName,
+                                         nil];
+        NSString *name = [NSString stringWithFormat:@"\n%@",[HandyRoutines stringFromStringTakingAccountOfNull:[indication objectForKey:kKey_IndicationName]]];
         NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
         [arrayOfDescriptionLines addObject:astring];
+       
+        attribs = [NSDictionary dictionaryWithObjectsAndKeys:
+                                          [NSFont systemFontOfSize:16.0f], NSFontAttributeName,
+                                          [[HandyRoutines colourForPageInIndication:indication]CGColor], kCTForegroundColorAttributeName,
+                                          nil];
+        astring = [[NSAttributedString alloc] initWithString:@"   █" attributes:attribs];
+        [arrayOfDescriptionLines addObject:astring];
+        
     }
 }
 
@@ -151,6 +180,9 @@
 -(void)addAllStringsForDrug:(NSMutableDictionary *)drug arrayOfDescriptionLines:(NSMutableArray *)arrayOfDescriptionLines
 {
     [self addStringForDrugName:drug arrayOfDescriptionLines:arrayOfDescriptionLines];
+    [self addStringForShownInList:drug arrayOfDescriptionLines:arrayOfDescriptionLines];
+    [self addStringForCalculationOfDrug:drug arrayOfDescriptionLines:arrayOfDescriptionLines];
+    [self addStringForDrugInfo:drug arrayOfDescriptionLines:arrayOfDescriptionLines];
 
 }
 
@@ -159,13 +191,40 @@
     if ([[drug objectForKey:kKey_DrugDisplayName] length]>0)
     {
         NSString *name = [NSString stringWithFormat:@"\n%@\n",[HandyRoutines stringFromStringTakingAccountOfNull:[drug objectForKey:kKey_DrugDisplayName]]];
-        NSMutableParagraphStyle *ps = [[NSMutableParagraphStyle alloc] init];
-        [ps setHeadIndent:20.0f];
-        [ps setFirstLineHeadIndent:20.0f];
+        NSMutableParagraphStyle *ps = [self paragraphStyleForLevel:1];
         NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys: [NSFont boldSystemFontOfSize:12.0f], NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
         NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
         [arrayOfDescriptionLines addObject:astring];
     }
+}
+
+-(void)addStringForDrugInfo:(NSMutableDictionary *)drug arrayOfDescriptionLines:(NSMutableArray *)arrayOfDescriptionLines
+{
+    if ([[drug objectForKey:kKey_DrugInfo] length]>0)
+    {
+        NSString *name = [NSString stringWithFormat:@"\n%@\n",[HandyRoutines stringFromStringTakingAccountOfNull:[drug objectForKey:kKey_DrugInfo]]];
+        NSMutableParagraphStyle *ps = [self paragraphStyleForLevel:1];
+        NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 [NSFont systemFontOfSize:12.0f], NSFontAttributeName, ps, NSParagraphStyleAttributeName,
+                                 [[NSColor darkGrayColor]CGColor], kCTForegroundColorAttributeName,
+                                 nil];
+        NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
+        [arrayOfDescriptionLines addObject:astring];
+    }
+}
+
+-(void)addStringForShownInList:(NSMutableDictionary *)drug arrayOfDescriptionLines:(NSMutableArray *)arrayOfDescriptionLines
+{
+    NSString *shownString = @"(Initially shown in list of drugs)\n";
+    if ([[drug objectForKey:kKey_DrugShowInList] boolValue] == NO)
+    {
+        shownString = @"(Not initially shown in list of drugs)\n";
+    }
+    NSMutableParagraphStyle *ps = [self paragraphStyleForLevel:1];
+    NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:11.0f], NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
+    NSAttributedString *astring = [[NSAttributedString alloc] initWithString:shownString attributes:attribs];
+    [arrayOfDescriptionLines addObject:astring];
+    
 }
 
 -(void)addStringForCalculationOfDrug:(NSMutableDictionary *)drug arrayOfDescriptionLines:(NSMutableArray *)arrayOfDescriptionLines
@@ -238,9 +297,7 @@
 
 -(NSAttributedString *)astringForDrugName:(NSString *)name
 {
-    NSMutableParagraphStyle *ps = [[NSMutableParagraphStyle alloc] init];
-    [ps setHeadIndent:20.0f];
-    [ps setFirstLineHeadIndent:20.0f];
+    NSMutableParagraphStyle *ps = [self paragraphStyleForLevel:1];
     NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys: [NSFont boldSystemFontOfSize:12.0f], NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
     NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
     return astring;
@@ -262,7 +319,6 @@
             
             for (NSMutableDictionary *drug in [indication objectForKey:kKey_ArrayOfDrugs]) {
                 [self addAllStringsForDrug:drug arrayOfDescriptionLines:arrayOfDescriptionLines];
-                [self addStringForCalculationOfDrug:drug arrayOfDescriptionLines:arrayOfDescriptionLines];
 
             }
         }

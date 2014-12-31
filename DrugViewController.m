@@ -34,8 +34,8 @@
 {
     [super viewWillAppear];
     self.tabViewCalculationType.layer.backgroundColor = [[NSColor clearColor] CGColor];
-    self.view.layer.backgroundColor = [[NSColor colorWithCalibratedWhite:0.72f alpha:1.0f] CGColor];
-    self.frameView.layer.backgroundColor = [[NSColor windowBackgroundColor] CGColor];
+    //self.view.layer.backgroundColor = [[NSColor colorWithCalibratedWhite:0.72f alpha:1.0f] CGColor];
+    //self.frameView.layer.backgroundColor = [[NSColor windowBackgroundColor] CGColor];
     self.myIndicationEditViewController.visualEffectsView.hidden = YES;
 }
 
@@ -55,7 +55,7 @@
         {
             return NO;
         }
-        [self.myIndicationEditViewController reloadTableViewSavingSelection:YES];
+        [self.myIndicationEditViewController reloadDrugsTableViewSavingSelection:YES];
     }
     
     [self alignDrugWithView];
@@ -83,6 +83,14 @@
 
 - (IBAction)settingsChanged:(id)sender {
     [self alignDrugWithView];
+}
+- (IBAction)checkBoxShowdrugInListChanged:(NSButton *)sender
+{
+    [self alignDrugWithView];
+    [self.myIndicationEditViewController reloadDrugsTableViewSavingSelection:YES];
+}
+- (IBAction)refreshThresholdsTapped:(id)sender {
+    [self reloadTableViewThresholdsSavingSelection:NO];
 }
 
 - (IBAction)checkBoxAllowDosageAdjustmentChanged:(NSButton *)sender
@@ -146,7 +154,7 @@
 
         [self.drugInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDrugName.stringValue] forKey:kKey_DrugDisplayName];
         [self.drugInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textFieldDoseUnits.stringValue] forKey:kKey_DoseUnits];
-        [self.drugInPlay setObject:[HandyRoutines dataForDescriptionAttributedString:self.textViewDrugDescription.attributedString]  forKey:kKey_DrugInfoDescription];
+        [self.drugInPlay setObject:[HandyRoutines stringFromStringTakingAccountOfNull:self.textViewDrugInfo.string] forKey:kKey_DrugInfo];
         [self.drugInPlay setObject:[NSNumber numberWithBool:self.checkboxShowDrugInList.state] forKey:kKey_DrugShowInList];
 
         NSInteger calc = [self.popupButtonCalculationType indexOfSelectedItem];
@@ -176,7 +184,7 @@
                 [self.drugInPlay setObject:[NSNumber numberWithInteger:kDoseCalculationBy_Threshold] forKey:kKey_DoseCalculationType];
                 [self.drugInPlay setObject:[NSNumber numberWithInteger:self.textFieldThresholdMinimumWeightAllowed.integerValue] forKey:kKey_Threshold_MinWeight];
                 [self addArrayForThresholdsIfNeeded];
-                [self reloadTableViewSavingSelection:YES];
+                [self reloadTableViewThresholdsSavingSelection:YES];
             }
                 break;
             case 2:
@@ -209,10 +217,11 @@
     self.allowUpdatesFromView = NO;
     [self.textFieldDrugName setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [drug objectForKey:kKey_DrugDisplayName]]];
     [self.textFieldDoseUnits setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull: [drug objectForKey:kKey_DoseUnits]]];
-    [[self.textViewDrugDescription textStorage] setAttributedString:[HandyRoutines attributedStringFromDescriptionData:[drug objectForKey:kKey_DrugInfoDescription]]];
+    [self.textViewDrugInfo setString:[HandyRoutines stringFromStringTakingAccountOfNull:[drug objectForKey:kKey_DrugInfo]]];
     [self.checkboxShowDrugInList setState:[(NSNumber *)[drug objectForKey:kKey_DrugShowInList] boolValue]];
     [self putDoseUnitsInLabels];
     [self zeroTheCalculationFields];
+    
     
     NSInteger calcType = [[self.drugInPlay objectForKey:kKey_DoseCalculationType] integerValue];
     
@@ -241,14 +250,14 @@
             [self.tabViewCalculationType selectTabViewItemAtIndex:1];
             [self.popupButtonCalculationType selectItemAtIndex:1];
             [self.textFieldThresholdMinimumWeightAllowed  setIntegerValue:[[drug objectForKey:kKey_Threshold_MinWeight] integerValue]];
-            [self reloadTableViewSavingSelection:NO];
+            [self reloadTableViewThresholdsSavingSelection:NO];
         }
             break;
         case kDoseCalculationBy_SingleDose:
         {
             [self.tabViewCalculationType selectTabViewItemAtIndex:2];
             [self.popupButtonCalculationType selectItemAtIndex:2];
-            [self.textFieldSingleDosagedescription setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull:[[drug objectForKey:kKey_SingleDoseInstructions] stringValue]]];
+            [self.textFieldSingleDosagedescription setStringValue:[HandyRoutines stringFromStringTakingAccountOfNull:[drug objectForKey:kKey_SingleDoseInstructions]]];
         }
             break;
     }
@@ -258,7 +267,7 @@
 
 #pragma mark - TableView DataSource & Delegate
 
--(void)reloadTableViewSavingSelection:(BOOL)saveSelection
+-(void)reloadTableViewThresholdsSavingSelection:(BOOL)saveSelection
 {
     NSInteger row = [self.tableViewThresholds selectedRow];
     [self.tableViewThresholds reloadData];
@@ -270,8 +279,8 @@
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
 {
+    NSInteger count=0;
     if ([aTableView.identifier isEqualToString:@"tableViewThresholds"]) {
-        NSInteger count=0;
         if ((NSMutableArray *)[self.drugInPlay objectForKey:kKey_Threshold_Array_Thresholds])
         {
             count=[(NSMutableArray *)[self.drugInPlay objectForKey:kKey_Threshold_Array_Thresholds] count];
@@ -282,7 +291,7 @@
         }
         return count;
     }
-    return 0;
+    return count;
 }
 
 
@@ -310,6 +319,7 @@
             [(ThresholdTableCellView *)[tableView viewAtColumn:0 row:row makeIfNecessary:NO] alignThresholdWithView];
         }
     }
+
 }
 
 -(void)forceUpdateOfThresholdCells
@@ -337,7 +347,7 @@
 {
     NSMutableDictionary *threshold = [HandyRoutines newEmptyThreshold];
     [(NSMutableArray *)[self.drugInPlay objectForKey:kKey_Threshold_Array_Thresholds] addObject:threshold];
-    [self reloadTableViewSavingSelection:NO];
+    [self reloadTableViewThresholdsSavingSelection:NO];
     [self saveGuideline];
 }
 
@@ -347,7 +357,7 @@
     if (row >=0 && row<[(NSMutableArray *)[self.drugInPlay objectForKey:kKey_Threshold_Array_Thresholds] count])
     {
         [(NSMutableArray *)[self.drugInPlay objectForKey:kKey_Threshold_Array_Thresholds] removeObjectAtIndex:row];
-        [self reloadTableViewSavingSelection:NO];
+        [self reloadTableViewThresholdsSavingSelection:NO];
         [self saveGuideline];
     }
 }

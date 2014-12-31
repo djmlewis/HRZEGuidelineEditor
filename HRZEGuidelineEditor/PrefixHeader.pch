@@ -106,15 +106,14 @@
 #define kIndicationColourBlackTag -1
 #define kIndicationColourWhiteTag -2
 
-//DRUG INFO
-#define kKey_DrugInfoName @"kKey_DrugInfoName"
-#define kKey_DrugInfoDescription @"kKey_DrugInfoDescription"
 
 
 //the parameters that define a drug use
 #define kKey_DoseCalculationType @"kKey_DoseCalculationType"
 #define kKey_DrugDisplayName @"kKey_DrugDisplayName"
 #define kKey_DrugShowInList @"kKey_DrugShowInList"
+#define kKey_DrugInfo @"kKey_DrugInfo"
+
 //mg/kg
 #define kKey_RoundingUpDown @"kRoundingUpDown"
 #define kKey_ValueOfRounding @"kValueOfRounding"

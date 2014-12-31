@@ -36,7 +36,7 @@ NSBrowserDelegate
 @property (weak) IBOutlet NSButton *buttonColourPage;
 
 
-@property (unsafe_unretained) IBOutlet NSTextField *textFieldIndicationComments;
+@property (unsafe_unretained) IBOutlet NSTextView *textViewIndicationComments;
 @property (weak) IBOutlet NSTextField *textFieldDosingInstructions;
 
 @property (weak) IBOutlet NSTableView *tableViewDrugs;
@@ -50,6 +50,6 @@ NSBrowserDelegate
 -(void)alignDisplayWithIndication:(NSMutableDictionary *)indication;
 -(void)alignIndicationWithView;
 -(void)saveGuideline;
--(void)reloadTableViewSavingSelection:(BOOL)saveSelection;
+-(void)reloadDrugsTableViewSavingSelection:(BOOL)saveSelection;
 
 @end
