@@ -485,7 +485,7 @@
             CGContextTranslateCTM(pdfContext, 0, pageRect.size.height);
             CGContextScaleCTM(pdfContext, 1.0, -1.0);
             
-            NSGraphicsContext* context = [NSGraphicsContext graphicsContextWithGraphicsPort: pdfContext flipped: YES];
+            NSGraphicsContext* context = [NSGraphicsContext graphicsContextWithCGContext:pdfContext flipped: YES];
             [NSGraphicsContext setCurrentContext: context];
             
             
