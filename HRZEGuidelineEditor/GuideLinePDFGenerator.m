@@ -128,20 +128,17 @@
 {
     if ([[indication objectForKey:kKey_IndicationName] length]>0)
     {
+        [arrayOfDescriptionLines addObject:[self astringForPlainText:@"\n"]];
         NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys:
                                          [NSFont boldSystemFontOfSize:14.0f], NSFontAttributeName,
-                                         [[HandyRoutines colourForHeaderInIndication:indication]CGColor], kCTForegroundColorAttributeName,
+                                         [HandyRoutines colourForHeaderInIndication:indication], NSForegroundColorAttributeName,
+                                        [HandyRoutines colourForPageInIndication:indication], NSBackgroundColorAttributeName,
                                          nil];
-        NSString *name = [NSString stringWithFormat:@"\n%@",[HandyRoutines stringFromStringTakingAccountOfNull:[indication objectForKey:kKey_IndicationName]]];
+        NSString *name = [NSString stringWithFormat:@"%@",[HandyRoutines stringFromStringTakingAccountOfNull:[indication objectForKey:kKey_IndicationName]]];
         NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
         [arrayOfDescriptionLines addObject:astring];
-       
-        attribs = [NSDictionary dictionaryWithObjectsAndKeys:
-                                          [NSFont systemFontOfSize:16.0f], NSFontAttributeName,
-                                          [[HandyRoutines colourForPageInIndication:indication]CGColor], kCTForegroundColorAttributeName,
-                                          nil];
-        astring = [[NSAttributedString alloc] initWithString:@"   █" attributes:attribs];
-        [arrayOfDescriptionLines addObject:astring];
+        [arrayOfDescriptionLines addObject:[self astringForPlainText:@"\n"]];
+
         
     }
 }
@@ -493,6 +490,7 @@
             NSRange glyphRange = [layoutManager glyphRangeForTextContainer:[layoutManager.textContainers objectAtIndex:page]];
 
             [layoutManager drawGlyphsForGlyphRange: glyphRange atPoint: CGPointMake(kMargin, kMargin)];
+            [layoutManager drawBackgroundForGlyphRange: glyphRange atPoint: CGPointMake(kMargin, kMargin)];
             
             [NSGraphicsContext restoreGraphicsState];
 
