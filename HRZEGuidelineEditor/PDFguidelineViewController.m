@@ -32,8 +32,6 @@
 
 -(void)setPDFdocumentWithPDFData:(NSData *)pdfData
 {
-    //PDFGuidelineWindowController* myPDFGuidelineWindowController = (PDFGuidelineWindowController*)[[self.view window] windowController];
-    //self.pdfView.document = [[PDFDocument alloc] initWithData:[myPDFGuidelineWindowController.callingGuidelineViewController createPDFData:CGSizeMake(842.0f,1190.0f)]];
     self.pdfView.document = [[PDFDocument alloc] initWithData:pdfData];
 
 }

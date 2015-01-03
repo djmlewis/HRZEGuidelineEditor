@@ -247,7 +247,7 @@
 -(NSData *)createPDFData:(CGSize)pageSize;
 {
     GuideLinePDFGenerator *texter = [[GuideLinePDFGenerator alloc] initWithGuideline:self.myGuidelineDocument.guideline withName:self.view.window.title];
-    return [texter createPDFData:pageSize];
+    return [texter createPDFDataUsingLayout:pageSize];
 }
 
 -(void)saveGuidelinePDF

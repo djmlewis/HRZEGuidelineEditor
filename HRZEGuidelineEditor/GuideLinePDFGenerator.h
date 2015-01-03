@@ -17,7 +17,7 @@
 -(id)initWithGuideline:(NSMutableDictionary *)guideline withName:(NSString *)guidelineName;
 
 -(void)createPDFAtURL:(NSURL *)url withSize:(CGSize)pageSize;
--(NSData *)createPDFData:(CGSize)pageSize;
-
+//-(NSData *)createPDFData:(CGSize)pageSize;
+-(NSData *)createPDFDataUsingLayout:(CGSize)pageSize;
 
 @end

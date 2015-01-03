@@ -336,7 +336,7 @@
 
 -(void)createPDFAtURL:(NSURL *)url withSize:(CGSize)pageSize// 1
 {
-    NSData *data = [self createPDFData:pageSize];
+    NSData *data = [self createPDFDataUsingLayout:pageSize];
     NSError *error = nil;
     [data writeToURL:url options:NSDataWritingAtomic error:&error];
 }
@@ -388,6 +388,8 @@
                 
                 // Draw a page number at the bottom of each page.
                 currentPage++;
+                
+            
                 [self drawPageNumber:currentPage pageSize:pageSize];
                 
                 // Render the current page and update the current range to
@@ -417,6 +419,97 @@
     CFRelease(data);
     return ndata;
 }
+
+
+-(NSData *)createPDFDataUsingLayout:(CGSize)pageSize
+{
+    NSAttributedString *astring = [self createDescriptionFromGuideline];
+    
+    CGRect pageRect = CGRectMake(0, 0, pageSize.width, pageSize.height);
+    CGRect containerRect = CGRectMake(0, 0, pageSize.width-(kMargin*2), pageSize.height-(kMargin*2));
+    
+    CGContextRef pdfContext;
+    CFDataRef boxData = NULL;
+    CFMutableDictionaryRef myDictionary = NULL;
+    CFMutableDictionaryRef pageDictionary = NULL;
+    
+    
+    myDictionary = CFDictionaryCreateMutable(NULL, 0,
+                                             &kCFTypeDictionaryKeyCallBacks,
+                                             &kCFTypeDictionaryValueCallBacks); // 4
+    CFDictionarySetValue(myDictionary, kCGPDFContextTitle, CFSTR("Guideline PDF File"));
+    CFDictionarySetValue(myDictionary, kCGPDFContextCreator, CFSTR("HRZE Editor"));
+    
+    CFAllocatorRef allocator = NULL;
+    CFMutableDataRef data = NULL;
+    data = CFDataCreateMutable(allocator, 0);
+    CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData(data);
+    pdfContext = CGPDFContextCreate(consumer, &pageRect, myDictionary);
+    CFRelease(myDictionary);
+    
+    pageDictionary = CFDictionaryCreateMutable(NULL, 0,
+                                               &kCFTypeDictionaryKeyCallBacks,
+                                               &kCFTypeDictionaryValueCallBacks); // 6
+    boxData = CFDataCreate(NULL,(const UInt8 *)&pageRect, sizeof (CGRect));
+    CFDictionarySetValue(pageDictionary, kCGPDFContextMediaBox, boxData);
+    
+    if (astring.length>0)
+    {
+        
+        //Make the layout
+        NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:astring];
+        NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
+        [textStorage addLayoutManager:layoutManager];
+        BOOL done = NO;
+        do
+        {
+            NSTextContainer *textContainer = [[NSTextContainer alloc] initWithContainerSize:CGSizeMake(containerRect.size.width, containerRect.size.height)];
+            [layoutManager addTextContainer:textContainer];
+            NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+            if (glyphRange.length == 0)
+            {
+                [layoutManager removeTextContainerAtIndex:layoutManager.textContainers.count-1];
+                done = YES;
+            }
+            
+        }while (done == NO);
+
+        //rnder the pages
+        for (int page = 0; page<layoutManager.textContainers.count; page++) {
+            CGPDFContextBeginPage (pdfContext, pageDictionary);
+
+            [NSGraphicsContext saveGraphicsState];
+            CGContextSetTextMatrix(pdfContext, CGAffineTransformIdentity);
+            // Core Text draws from the bottom-left corner up, so flip
+            // the current transform prior to drawing.
+            CGContextTranslateCTM(pdfContext, 0, pageRect.size.height);
+            CGContextScaleCTM(pdfContext, 1.0, -1.0);
+            
+            NSGraphicsContext* context = [NSGraphicsContext graphicsContextWithGraphicsPort: pdfContext flipped: YES];
+            [NSGraphicsContext setCurrentContext: context];
+            
+            
+            // Do Cocoa drawing here.
+            NSRange glyphRange = [layoutManager glyphRangeForTextContainer:[layoutManager.textContainers objectAtIndex:page]];
+
+            [layoutManager drawGlyphsForGlyphRange: glyphRange atPoint: CGPointMake(kMargin, kMargin)];
+            
+            [NSGraphicsContext restoreGraphicsState];
+
+            CGPDFContextEndPage (pdfContext);
+        }
+        
+        
+    }
+    CGContextRelease (pdfContext);// 10
+    CFRelease(pageDictionary); // 11
+    CFRelease(boxData);
+    CGDataConsumerRelease(consumer);
+    NSData *ndata = [NSData dataWithData:(__bridge NSData *)(data)];
+    CFRelease(data);
+    return ndata;
+}
+
 
 
 // Use Core Text to draw the text in a frame on the page.

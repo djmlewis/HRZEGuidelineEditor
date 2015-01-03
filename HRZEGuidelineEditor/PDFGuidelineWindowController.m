@@ -26,7 +26,6 @@
 
 -(void)setPDFdocumentWithPDFData:(NSData *)pdfData
 {
-    //NSData *pdfData = [self.callingGuidelineViewController createPDFData:CGSizeMake(842.0f,1190.0f)];
     [self.embeddedPDFguidelineViewController setPDFdocumentWithPDFData:pdfData];
 }
 @end
