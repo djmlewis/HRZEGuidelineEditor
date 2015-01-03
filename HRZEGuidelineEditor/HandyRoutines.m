@@ -179,6 +179,7 @@
     if (attributedString.length == 0) {
         attributedString = [[NSAttributedString alloc] initWithString:@" "];
     }
+
     NSError *error = nil;
     NSRange range = NSMakeRange(0, attributedString.length);
     NSDictionary *dict = [NSDictionary dictionaryWithObject:NSRTFTextDocumentType forKey:NSDocumentTypeDocumentAttribute];
