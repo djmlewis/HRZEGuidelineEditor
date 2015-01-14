@@ -38,7 +38,7 @@ NSTableViewDataSource, NSTableViewDelegate
 -(void)saveGuideline;
 
 
--(NSData *)createPDFData:(CGSize)pageSize;
+-(NSData *)createPDFData:(NSPrintInfo *)printInfo;
 
 //-(NSMutableAttributedString *)createDescriptionFromGuideline;
 

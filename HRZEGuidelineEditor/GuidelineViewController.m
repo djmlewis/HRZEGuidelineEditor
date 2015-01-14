@@ -226,9 +226,8 @@
     {
         PDFGuidelineWindowController* thePDFGuidelineWindowController = (PDFGuidelineWindowController *)[segue destinationController];
         thePDFGuidelineWindowController.callingGuidelineViewController = self;
-        CGSize size = CGSizeMake(842.0f,1190.0f);
         [[thePDFGuidelineWindowController window] setTitle:[self.view.window.title stringByDeletingPathExtension]];
-        [thePDFGuidelineWindowController setPDFdocumentWithPDFData:[self createPDFData:size]];
+        [thePDFGuidelineWindowController setPDFdocumentWithPDFData:[self createPDFData:self.myGuidelineDocument.printInfo]];
     }
     /*else if ([segue.identifier isEqualToString:@"showPDF"])
     {
@@ -244,10 +243,10 @@
 
 #pragma mark - PDF
 
--(NSData *)createPDFData:(CGSize)pageSize;
+-(NSData *)createPDFData:(NSPrintInfo *)printInfo;
 {
     GuideLinePDFGenerator *texter = [[GuideLinePDFGenerator alloc] initWithGuideline:self.myGuidelineDocument.guideline withName:self.view.window.title];
-    return [texter createPDFDataUsingLayout:pageSize];
+    return [texter createPDFDataUsingLayoutWithPrintInfo:printInfo];
 }
 
 -(void)saveGuidelinePDF
@@ -261,8 +260,7 @@
             if (result == NSFileHandlingPanelOKButton) {
                 NSURL *destination = panel.URL;
                 GuideLinePDFGenerator *texter = [[GuideLinePDFGenerator alloc] initWithGuideline:self.myGuidelineDocument.guideline withName:self.view.window.title];
-                CGSize size = CGSizeMake(842.0f,1190.0f);
-                [texter createPDFAtURL:destination withSize:size];
+                [texter createPDFAtURL:destination withPrintInfo:self.myGuidelineDocument.printInfo];
             }
         }];
     }

@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 
 @interface GuideLinePDFGenerator : NSObject
 
@@ -16,8 +17,7 @@
 
 -(id)initWithGuideline:(NSMutableDictionary *)guideline withName:(NSString *)guidelineName;
 
--(void)createPDFAtURL:(NSURL *)url withSize:(CGSize)pageSize;
-//-(NSData *)createPDFData:(CGSize)pageSize;
--(NSData *)createPDFDataUsingLayout:(CGSize)pageSize;
+-(void)createPDFAtURL:(NSURL *)url withPrintInfo:(NSPrintInfo *)printInfo;
+-(NSData *)createPDFDataUsingLayoutWithPrintInfo:(NSPrintInfo *)printInfo;
 
 @end

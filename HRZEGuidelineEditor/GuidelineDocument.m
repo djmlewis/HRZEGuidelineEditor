@@ -70,6 +70,26 @@
     return self.guideline != nil;
 }
 
+- (void)printDocumentWithSettings:(NSDictionary *)printSettings
+                   showPrintPanel:(BOOL)showPrintPanel
+                         delegate:(id)delegate
+                 didPrintSelector:(SEL)didPrintSelector
+                      contextInfo:(void *)contextInfo
+{
+    
+}
 
+-(void)printDocument:(id)sender
+{
+    [super printDocument:sender];
+}
+
+
+- (NSPrintOperation *)printOperationWithSettings:(NSDictionary *)printSettings
+                                           error:(NSError **)outError
+{
+    NSView *view = [[NSView alloc] initWithFrame:NSMakeRect(0.0f, 0.0f, 100.0f, 100.0f)];
+    return [NSPrintOperation printOperationWithView:view printInfo:self.printInfo];
+}
 
 @end

@@ -719,6 +719,9 @@
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <rect key="contentRect" x="196" y="240" width="1366" height="768"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1577"/>
+                        <connections>
+                            <outlet property="delegate" destination="jGA-0Y-lOj" id="f37-uh-IDK"/>
+                        </connections>
                     </window>
                     <connections>
                         <segue destination="5gI-5U-AMq" kind="relationship" relationship="window.shadowedContentViewController" id="nsd-lR-9xd"/>

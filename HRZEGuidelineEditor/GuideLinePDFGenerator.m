@@ -5,11 +5,6 @@
 //  Created by David Lewis on 28/12/2014.
 //  Copyright (c) 2014 eu.djml. All rights reserved.
 //
-#define kPDFA4 1
-#define kPDFUSL 2
-#define kTXT 3
-#define kRTF 4
-#define kMargin 72.0f
 
 #import "GuideLinePDFGenerator.h"
 #import "HandyRoutines.h"
@@ -132,7 +127,6 @@
         NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys:
                                          [NSFont boldSystemFontOfSize:14.0f], NSFontAttributeName,
                                          [HandyRoutines colourForHeaderInIndication:indication], NSForegroundColorAttributeName,
-                                        [HandyRoutines colourForPageInIndication:indication], NSBackgroundColorAttributeName,
                                          nil];
         NSString *name = [NSString stringWithFormat:@"%@",[HandyRoutines stringFromStringTakingAccountOfNull:[indication objectForKey:kKey_IndicationName]]];
         NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
@@ -150,7 +144,9 @@
         NSString *name = [NSString stringWithFormat:@"%@\n",[HandyRoutines stringFromStringTakingAccountOfNull:[indication objectForKey:kKey_IndicationDosingInstructions]]];
         NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys:
                                  [NSFont systemFontOfSize:12.0f], NSFontAttributeName,
-                                 nil];
+                                 [HandyRoutines colourForHeaderInIndication:indication], NSForegroundColorAttributeName,
+                                 [HandyRoutines colourForPageInIndication:indication], NSBackgroundColorAttributeName,
+                                nil];
         NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
         [arrayOfDescriptionLines addObject:astring];
     }
@@ -167,6 +163,8 @@
         NSString *name = [NSString stringWithFormat:@"%@\n%@\n",[HandyRoutines stringFromStringTakingAccountOfNull:[indication objectForKey:kKey_IndicationComments]],initiHidden];
         NSDictionary *attribs = [NSDictionary dictionaryWithObjectsAndKeys:
                                  [NSFont systemFontOfSize:10.0f], NSFontAttributeName,
+                                 [HandyRoutines colourForHeaderInIndication:indication], NSForegroundColorAttributeName,
+                                 [HandyRoutines colourForPageInIndication:indication], NSBackgroundColorAttributeName,
                                  nil];
         NSAttributedString *astring = [[NSAttributedString alloc] initWithString:name attributes:attribs];
         [arrayOfDescriptionLines addObject:astring];
@@ -331,99 +329,19 @@
 
 #pragma mark - PDF
 
--(void)createPDFAtURL:(NSURL *)url withSize:(CGSize)pageSize// 1
+-(void)createPDFAtURL:(NSURL *)url withPrintInfo:(NSPrintInfo *)printInfo// 1
 {
-    NSData *data = [self createPDFDataUsingLayout:pageSize];
+    NSData *data = [self createPDFDataUsingLayoutWithPrintInfo:printInfo];
     NSError *error = nil;
     [data writeToURL:url options:NSDataWritingAtomic error:&error];
 }
 
--(NSData *)createPDFData:(CGSize)pageSize// 1
+-(NSData *)createPDFDataUsingLayoutWithPrintInfo:(NSPrintInfo *)printInfo
 {
     NSAttributedString *astring = [self createDescriptionFromGuideline];
     
-    CGRect pageRect = CGRectMake(0, 0, pageSize.width, pageSize.height);
-    
-    CGContextRef pdfContext;
-    //CFStringRef path;
-    CFDataRef boxData = NULL;
-    CFMutableDictionaryRef myDictionary = NULL;
-    CFMutableDictionaryRef pageDictionary = NULL;
-    
-    
-    myDictionary = CFDictionaryCreateMutable(NULL, 0,
-                                             &kCFTypeDictionaryKeyCallBacks,
-                                             &kCFTypeDictionaryValueCallBacks); // 4
-    CFDictionarySetValue(myDictionary, kCGPDFContextTitle, CFSTR("Guideline PDF File"));
-    CFDictionarySetValue(myDictionary, kCGPDFContextCreator, CFSTR("HRZE Editor"));
-    
-    CFAllocatorRef allocator = NULL;
-    CFMutableDataRef data = NULL;
-    data = CFDataCreateMutable(allocator, 0);
-    CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData(data);
-    pdfContext = CGPDFContextCreate(consumer, &pageRect, myDictionary);
-    CFRelease(myDictionary);
-    
-    pageDictionary = CFDictionaryCreateMutable(NULL, 0,
-                                               &kCFTypeDictionaryKeyCallBacks,
-                                               &kCFTypeDictionaryValueCallBacks); // 6
-    boxData = CFDataCreate(NULL,(const UInt8 *)&pageRect, sizeof (CGRect));
-    CFDictionarySetValue(pageDictionary, kCGPDFContextMediaBox, boxData);
-    
-    if (astring.length>0)
-    {
-        CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)(astring));
-        if (framesetter)
-        {
-            CFRange currentRange = CFRangeMake(0, 0);
-            NSInteger currentPage = 0;
-            BOOL done = NO;
-            
-            do {
-                // Mark the beginning of a new page.
-                CGPDFContextBeginPage (pdfContext, pageDictionary);
-                
-                // Draw a page number at the bottom of each page.
-                currentPage++;
-                
-            
-                [self drawPageNumber:currentPage pageSize:pageSize];
-                
-                // Render the current page and update the current range to
-                // point to the beginning of the next page.
-                currentRange = [self renderPage:currentPage withTextRange:currentRange andFramesetter:framesetter pageSize:pageSize pdfContext:pdfContext];
-                
-                // If we're at the end of the text, exit the loop.
-                if (currentRange.location == CFAttributedStringGetLength((CFAttributedStringRef)astring))
-                    done = YES;
-                CGPDFContextEndPage (pdfContext);
-                
-            } while (!done);
-            
-            
-            // Release the framewetter.
-            CFRelease(framesetter);
-            
-        } else {
-            NSLog(@"Could not create the framesetter needed to lay out the atrributed string.");
-        }
-    }
-    CGContextRelease (pdfContext);// 10
-    CFRelease(pageDictionary); // 11
-    CFRelease(boxData);
-    CGDataConsumerRelease(consumer);
-    NSData *ndata = [NSData dataWithData:(__bridge NSData *)(data)];
-    CFRelease(data);
-    return ndata;
-}
-
-
--(NSData *)createPDFDataUsingLayout:(CGSize)pageSize
-{
-    NSAttributedString *astring = [self createDescriptionFromGuideline];
-    
-    CGRect pageRect = CGRectMake(0, 0, pageSize.width, pageSize.height);
-    CGRect containerRect = CGRectMake(0, 0, pageSize.width-(kMargin*2), pageSize.height-(kMargin*2));
+    CGRect pageRect = CGRectMake(0, 0, printInfo.paperSize.width, printInfo.paperSize.height);
+    CGRect containerRect = CGRectMake(0, 0, printInfo.paperSize.width-printInfo.leftMargin-printInfo.rightMargin, printInfo.paperSize.height-printInfo.topMargin-printInfo.bottomMargin);
     
     CGContextRef pdfContext;
     CFDataRef boxData = NULL;
@@ -457,6 +375,7 @@
         NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:astring];
         NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
         [textStorage addLayoutManager:layoutManager];
+        
         BOOL done = NO;
         do
         {
@@ -489,8 +408,8 @@
             // Do Cocoa drawing here.
             NSRange glyphRange = [layoutManager glyphRangeForTextContainer:[layoutManager.textContainers objectAtIndex:page]];
 
-            [layoutManager drawGlyphsForGlyphRange: glyphRange atPoint: CGPointMake(kMargin, kMargin)];
-            [layoutManager drawBackgroundForGlyphRange: glyphRange atPoint: CGPointMake(kMargin, kMargin)];
+            [layoutManager drawGlyphsForGlyphRange: glyphRange atPoint: CGPointMake(printInfo.leftMargin, printInfo.topMargin)];
+            [layoutManager drawBackgroundForGlyphRange: glyphRange atPoint: CGPointMake(printInfo.leftMargin, printInfo.topMargin)];
             
             [NSGraphicsContext restoreGraphicsState];
 
@@ -508,86 +427,6 @@
     return ndata;
 }
 
-
-
-// Use Core Text to draw the text in a frame on the page.
-- (CFRange)renderPage:(NSInteger)pageNum withTextRange:(CFRange)currentRange
-       andFramesetter:(CTFramesetterRef)framesetter pageSize:(CGSize)pageSize pdfContext:(CGContextRef) currentContext
-{
-    // Get the graphics context.
-    //CGContextRef    currentContext = UIGraphicsGetCurrentContext();
-    
-    // Put the text matrix into a known state. This ensures
-    // that no old scaling factors are left in place.
-    CGContextSetTextMatrix(currentContext, CGAffineTransformIdentity);
-    
-    // Create a path object to enclose the text. Use 72 point
-    // margins all around the text.
-    CGRect    frameRect = CGRectMake(kMargin, kMargin, pageSize.width-(kMargin*2), pageSize.height-(kMargin*2));
-    CGMutablePathRef framePath = CGPathCreateMutable();
-    CGPathAddRect(framePath, NULL, frameRect);
-    
-    // Get the frame that will do the rendering.
-    // The currentRange variable specifies only the starting point. The framesetter
-    // lays out as much text as will fit into the frame.
-    CTFrameRef frameRef = CTFramesetterCreateFrame(framesetter, currentRange, framePath, NULL);
-    CGPathRelease(framePath);
-    
-    // Core Text draws from the bottom-left corner up, so flip
-    // the current transform prior to drawing.
-    //DONT DO THIS
-    //CGContextTranslateCTM(currentContext, 0, pageSize.height);
-    //CGContextScaleCTM(currentContext, 1.0, -1.0);
-    
-    // Draw the frame.
-    CTFrameDraw(frameRef, currentContext);
-    
-    // Update the current range based on what was drawn.
-    currentRange = CTFrameGetVisibleStringRange(frameRef);
-    currentRange.location += currentRange.length;
-    currentRange.length = 0;
-    CFRelease(frameRef);
-    
-    return currentRange;
-}
-
-- (void)drawPageNumber:(NSInteger)pageNum pageSize:(CGSize)pageSize
-{
-    NSString *pageString = [NSString stringWithFormat:@"- %ld -", (long)pageNum];
-    NSFont *theFont = [NSFont systemFontOfSize:12];
-    CGSize maxSize = CGSizeMake(pageSize.width, kMargin);
-    CGSize pageStringSize = [pageString boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObject:theFont forKey:NSFontAttributeName]].size;
-    
-    CGRect stringRect = CGRectMake(((pageSize.width - pageStringSize.width) / 2.0),
-                                   (pageSize.height-kMargin) + ((kMargin - pageStringSize.height) / 2.0),
-                                   pageStringSize.width,
-                                   pageStringSize.height);
-    
-    [pageString drawInRect:stringRect withAttributes:[NSDictionary dictionaryWithObject:theFont forKey:NSFontAttributeName]];
-}
-
-/*
- Letter		 612x792
- LetterSmall	 612x792
- Tabloid		 792x1224
- Ledger		1224x792
- Legal		 612x1008
- Statement	 396x612
- Executive	 540x720
- A0               2384x3371
- A1              1685x2384
- A2		1190x1684
- A3		 842x1190
- A4		 595x842
- A4Small		 595x842
- A5		 420x595
- B4		 729x1032
- B5		 516x729
- Envelope	 ???x???
- Folio		 612x936
- Quarto		 610x780
- 10x14		 720x1008
- */
 
 
 /*
